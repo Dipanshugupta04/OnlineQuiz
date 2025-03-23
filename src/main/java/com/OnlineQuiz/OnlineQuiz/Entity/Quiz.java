@@ -39,7 +39,9 @@ public class Quiz {
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions = new ArrayList<>();
 
-
+// One Quiz can have multiple Rooms
+@OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
+private List<Room> rooms;
 
     // Getters and Setters
     
@@ -89,6 +91,14 @@ public class Quiz {
 
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
+    }
+
+    public List<Room> getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(List<Room> rooms) {
+        this.rooms = rooms;
     }
 
     
