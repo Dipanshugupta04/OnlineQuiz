@@ -11,19 +11,23 @@ import jakarta.persistence.Id;
 import jakarta.persistence.*;
 
 @Entity
-public class Room {
+public class RoomId {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // Unique Room ID
     
     private String roomId; // Unique room identifier
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "quiz_id", nullable = false) // Foreign Key in Room table
     private Quiz quiz; // Reference to the Quiz entity
 
     @ElementCollection
     private List<String> participants; // List of users in the room
+
+    
+
+     // Getters and Setters
 
     public Long getId() {
         return id;
@@ -57,7 +61,7 @@ public class Room {
         this.participants = participants;
     }
 
-    // Getters and Setters
+   
 
 
 

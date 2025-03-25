@@ -1,14 +1,16 @@
 package com.OnlineQuiz.OnlineQuiz.Entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.ElementCollection;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Question {
@@ -18,11 +20,8 @@ public class Question {
     
     private String questionText;
  // Multiple-choice options
-    @ElementCollection
-    private List<String> options; 
-    // choose  correct-options
-    
-
+ @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+ private List<Option> options = new ArrayList<>();
     @ManyToOne
     @JoinColumn(name = "quiz_id")
     private Quiz quiz; // Link to the parent Quiz
@@ -43,11 +42,11 @@ public class Question {
         this.questionText = questionText;
     }
 
-    public List<String> getOptions() {
+    public List<Option> getOptions() {
         return options;
     }
 
-    public void setOptions(List<String> options) {
+    public void setOptions(List<Option> options) {
         this.options = options;
     }
 

@@ -14,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Quiz {
@@ -39,9 +40,9 @@ public class Quiz {
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions = new ArrayList<>();
 
-// One Quiz can have multiple Rooms
-@OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
-private List<Room> rooms;
+// One Quiz can have multiple RoomID
+@OneToOne(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
+private RoomId RoomID;
 
     // Getters and Setters
     
@@ -93,13 +94,15 @@ private List<Room> rooms;
         this.questions = questions;
     }
 
-    public List<Room> getRooms() {
-        return rooms;
+    public RoomId getRooms() {
+        return RoomID;
     }
 
-    public void setRooms(List<Room> rooms) {
-        this.rooms = rooms;
+    public void setRooms(RoomId RoomID) {
+        this.RoomID = RoomID;
     }
+
+    
 
     
 }

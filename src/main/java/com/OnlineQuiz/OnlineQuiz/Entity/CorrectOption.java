@@ -5,33 +5,43 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class CorrectOption {
-      @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private String correctoption;
+    private Long id;
+    private String CorrectOption;
+    
+    @ManyToOne
+    @JoinColumn(name = "option_id")
+    private Option option;
 
-
-    @OneToOne
-    @JoinColumn(name = "question_id")
-    private CorrectOption CorrectOptions; 
-    public int getId() {
+    public Long getId() {
         return id;
     }
-    public void setId(int id) {
+
+    public void setId(Long id) {
         this.id = id;
     }
-    public String getCorrectoption() {
-        return correctoption;
-    }
-    public void setCorrectoption(String correctoption) {
-        this.correctoption = correctoption;
+
+    public String getCorrectOption() {
+        return CorrectOption;
     }
 
+    public void setCorrectOption(String correctOption) {
+        CorrectOption = correctOption;
+    }
 
+    public Option getOption() {
+        return option;
+    }
+
+    public void setOption(Option option) {
+        this.option = option;
+    }
     
-    
+    //Getter and Setter
+
 }
