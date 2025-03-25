@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Question {
@@ -17,9 +18,11 @@ public class Question {
     private Long id;
     
     private String questionText;
-
+ // Multiple-choice options
     @ElementCollection
-    private List<String> options; // Multiple-choice options
+    private List<String> options; 
+    // choose  correct-options
+    
 
     @ManyToOne
     @JoinColumn(name = "quiz_id")
