@@ -1,0 +1,22 @@
+{
+    "roomId": "ABC123",
+    "title": "Java Basics",
+    "questions": [
+        {
+            "questionText": "What is Java?",
+            "answers": [
+                { "answerText": "A programming language", "isCorrect": true },
+                { "answerText": "A coffee brand", "isCorrect": false },
+                { "answerText": "A type of snake", "isCorrect": false }
+            ]
+        },
+        {
+            "questionText": "Which keyword is used to define a class in Java?",
+            "answers": [
+                { "answerText": "class", "isCorrect": true },
+                { "answerText": "define", "isCorrect": false },
+                { "answerText": "struct", "isCorrect": false }
+            ]
+        }
+    ]
+}

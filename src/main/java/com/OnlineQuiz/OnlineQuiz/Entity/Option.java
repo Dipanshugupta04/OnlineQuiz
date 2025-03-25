@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Option {
@@ -23,8 +24,11 @@ public class Option {
     @JoinColumn(name = "question_id")
     private Question question;
 
-    @OneToMany(mappedBy = "option", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne
+    @JoinColumn(name = "option")
     private List<CorrectOption> answerChoices = new ArrayList<>();
+
+     // Getters and Setters
 
     public Long getId() {
         return id;
@@ -58,7 +62,7 @@ public class Option {
         this.answerChoices = answerChoices;
     }
 
-    // Getters and Setters
+   
     
 }
 
