@@ -3,18 +3,9 @@ package com.OnlineQuiz.OnlineQuiz.Entity;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 
 @Entity
 public class Quiz {
@@ -23,16 +14,11 @@ public class Quiz {
     private Long id;
     
     private String title; // Quiz Paper Name
+    private String userName; 
 
-    private String UserName;
-
-    //  Automatically time creation
-
-     @CreationTimestamp
-    @Column(updatable = false)  // Prevent updates to this field
+    @CreationTimestamp
+    @Column(updatable = false)  
     private LocalDateTime createdAt;
-
-//  Automatically time creation
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
@@ -40,69 +26,28 @@ public class Quiz {
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions = new ArrayList<>();
 
-// One Quiz can have multiple RoomID
-@OneToOne(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
-private RoomId RoomID;
+    @OneToOne(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
+    private RoomId roomId;
 
     // Getters and Setters
-    
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getUserName() { return userName; }
+    public void setUserName(String userName) { this.userName = userName; }
 
-    public String getUserName() {
-        return UserName;
-    }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
 
-    public void setUserName(String userName) {
-        UserName = userName;
-    }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
-    public String getTitle() {
-        return title;
-    }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public List<Question> getQuestions() { return questions; }
+    public void setQuestions(List<Question> questions) { this.questions = questions; }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public List<Question> getQuestions() {
-        return questions;
-    }
-
-    public void setQuestions(List<Question> questions) {
-        this.questions = questions;
-    }
-
-    public RoomId getRooms() {
-        return RoomID;
-    }
-
-    public void setRooms(RoomId RoomID) {
-        this.RoomID = RoomID;
-    }
-
-    
-
-    
+    public RoomId getRoomId() { return roomId; }
+    public void setRoomId(RoomId roomId) { this.roomId = roomId; }
 }

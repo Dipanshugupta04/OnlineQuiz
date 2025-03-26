@@ -4,18 +4,11 @@
     "questions": [
         {
             "questionText": "What is Java?",
-            "answers": [
-                { "answerText": "A programming language", "isCorrect": true },
-                { "answerText": "A coffee brand", "isCorrect": false },
-                { "answerText": "A type of snake", "isCorrect": false }
-            ]
-        },
-        {
-            "questionText": "Which keyword is used to define a class in Java?",
-            "answers": [
-                { "answerText": "class", "isCorrect": true },
-                { "answerText": "define", "isCorrect": false },
-                { "answerText": "struct", "isCorrect": false }
+            "options": [
+                { "optionText": "A programming language", "CorrectOption": true },
+                { "optionText": "A coffee brand", "CorrectOption": false },
+                { "optionText": "A type of snake", "CorrectOption": false },
+                { "optionText": "None of these", "CorrectOption": false }
             ]
         }
     ]

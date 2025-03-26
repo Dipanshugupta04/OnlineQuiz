@@ -1,47 +1,28 @@
 package com.OnlineQuiz.OnlineQuiz.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 @Entity
 public class CorrectOption {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String CorrectOption;
-    
+
+    @ManyToOne  // ✅ Fix: Ensure correct Many-to-One mapping
+    @JoinColumn(name = "question_id", nullable = false)
+    private Question question;
+
     @ManyToOne
-    @JoinColumn(name = "option_id")
+    @JoinColumn(name = "option_id", nullable = false) // ✅ Link correct option
     private Option option;
 
-    public Long getId() {
-        return id;
-    }
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Question getQuestion() { return question; }
+    public void setQuestion(Question question) { this.question = question; }
 
-    public String getCorrectOption() {
-        return CorrectOption;
-    }
-
-    public void setCorrectOption(String correctOption) {
-        CorrectOption = correctOption;
-    }
-
-    public Option getOption() {
-        return option;
-    }
-
-    public void setOption(Option option) {
-        this.option = option;
-    }
-    
-    //Getter and Setter
-
+    public Option getOption() { return option; }
+    public void setOption(Option option) { this.option = option; }
 }

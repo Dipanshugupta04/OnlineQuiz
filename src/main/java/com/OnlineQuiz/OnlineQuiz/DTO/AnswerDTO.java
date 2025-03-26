@@ -2,22 +2,30 @@ package com.OnlineQuiz.OnlineQuiz.DTO;
 
 public class AnswerDTO {
     private String answerText;
-    private String  CorrectAnswer;
+    private boolean correctAnswer; // ✅ Fix: Ensures correct answer info
 
-    // Getters and Setters
-    
+    // Constructor
+    public AnswerDTO() {}
+
+    public AnswerDTO(String answerText, boolean correctAnswer) {
+        this.answerText = answerText;
+        this.correctAnswer = correctAnswer;
+    }
+
+    // ✅ Getters and Setters
     public String getAnswerText() {
         return answerText;
     }
+
     public void setAnswerText(String answerText) {
         this.answerText = answerText;
     }
-    public String CorrectAnswer() {
-        return CorrectAnswer;
-    }
-    public void setCorrect(String CorrectAnswer) {
-        this.CorrectAnswer = CorrectAnswer;
+
+    public boolean isCorrectAnswer() {  
+        return correctAnswer;
     }
 
-    
+    public void setCorrectAnswer(boolean correctAnswer) {
+        this.correctAnswer = correctAnswer;
+    }
 }
