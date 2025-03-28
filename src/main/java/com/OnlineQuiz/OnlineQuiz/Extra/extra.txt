@@ -1,0 +1,34 @@
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class QuizService {
+    
+    @Autowired
+    private quizRepository quizRepository;
+
+    @Transactional
+    public Quiz createQuiz(QuizRequestDTO quizDTO) {
+        Quiz quiz = new Quiz();
+        quiz.setTitle(quizDTO.getTitle());
+
+        // ✅ Automatically fetch the logged-in user's username
+        String loggedInUser = getLoggedInUsername();
+        quiz.setUserName(loggedInUser); // ✅ Assign username from JWT token
+
+        quiz = quizRepository.save(quiz);
+        return quiz;
+    }
+
+    // ✅ Helper method to get the logged-in username
+    private String getLoggedInUsername() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            return ((UserDetails) principal).getUsername(); // ✅ Get username from Spring Security
+        } else {
+            return principal.toString();
+        }
+    }
+}
