@@ -7,7 +7,6 @@ import com.OnlineQuiz.OnlineQuiz.DTO.QuizRequestDTO;
 import com.OnlineQuiz.OnlineQuiz.Entity.Quiz;
 import com.OnlineQuiz.OnlineQuiz.Service.QuizService;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
