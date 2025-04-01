@@ -17,9 +17,10 @@ public class Question {
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CorrectOption> correctOptions = new ArrayList<>();
+  
 
     @ManyToOne
-    @JoinColumn(name = "quiz_id")
+    @JoinColumn(name = "quiz_id")   //  Linked with parent 
     private Quiz quiz;
 
     // Getters and Setters

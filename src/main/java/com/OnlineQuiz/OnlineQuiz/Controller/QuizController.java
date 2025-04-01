@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.*;
 import com.OnlineQuiz.OnlineQuiz.DTO.QuizRequestDTO;
 import com.OnlineQuiz.OnlineQuiz.Entity.Quiz;
 import com.OnlineQuiz.OnlineQuiz.Service.QuizService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/quiz")
@@ -22,6 +25,10 @@ public class QuizController {
     }
     
     
+    @GetMapping("/home")
+    public String homString() {
+       return "this is home";
+    }
     
 
 }
