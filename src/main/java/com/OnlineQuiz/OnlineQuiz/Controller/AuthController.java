@@ -9,7 +9,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-@CrossOrigin(origins = "http://localhost:5500")
+@CrossOrigin(origins = {"http://127.0.0.1:5500", "http://localhost:5500"})
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
