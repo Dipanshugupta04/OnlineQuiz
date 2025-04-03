@@ -32,6 +32,7 @@ public class GoogleAuthService {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<Map> response = restTemplate.getForEntity(GOOGLE_TOKEN_URL + idToken, Map.class);
         Map<String, Object> userDetails = response.getBody();
+        System.out.println(userDetails.get("email"));
 
         if (userDetails == null || userDetails.get("email") == null) {
             throw new RuntimeException("Invalid Google Token");
