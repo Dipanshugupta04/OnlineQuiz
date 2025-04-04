@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Map;
 import java.util.Optional;
@@ -52,9 +54,10 @@ public class GoogleAuthService {
             newUser.setName(name);
             newUser.setPictureUrl(pictureUrl);
             newUser.setRole(role.User);
-            String password=UUID.randomUUID().toString();
-            newUser.setPassword(password);
-            newUser.setConfirmPassword(password);
+            String password=(UUID.randomUUID().toString());
+            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            newUser.setPassword(passwordEncoder.encode(password));
+            newUser.setConfirmPassword(passwordEncoder.encode(password));
             userRepository.save(newUser);
         }
 
