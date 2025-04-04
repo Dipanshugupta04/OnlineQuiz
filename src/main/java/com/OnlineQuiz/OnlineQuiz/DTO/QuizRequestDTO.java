@@ -5,7 +5,7 @@ import java.util.List;
 public class QuizRequestDTO {
     private String title;
     private String userName;
-    private List<QuestionDTO> questions;  // ✅ Fix: Removed `optionText` (redundant)
+    private List<QuestionDTO> questions;  
 
     public String getTitle() {
         return title;

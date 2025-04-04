@@ -92,10 +92,8 @@ public class JWTService {
 
 
 
-
-    public String extractEmail(String jwt) {
-        
-        throw new UnsupportedOperationException("Unimplemented method 'extractEmail'");
+    public String extractEmail(String token) {
+        return extractClaim(token, Claims::getSubject);
     }
     
 }
