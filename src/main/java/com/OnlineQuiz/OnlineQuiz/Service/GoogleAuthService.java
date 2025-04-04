@@ -59,7 +59,7 @@ public class GoogleAuthService {
         }
 
         // Generate JWT Token
-        return jwtService.generateToken(email);
+        return jwtService.generateToken(email,userDetails);
     }
 }
 

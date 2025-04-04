@@ -37,8 +37,11 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // .oauth2Login(oauth->oauth.successHandler(authenticationSuccessor))
-                .oauth2Login(Customizer.withDefaults())
+                
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+
+                .oauth2Login(Customizer.withDefaults())
+                // .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout
                 .logoutSuccessUrl("/")
                 .permitAll()

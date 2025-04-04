@@ -23,7 +23,7 @@ public class JWTService {
     public JWTService(){
         
         try {
-            KeyGenerator keyGen = KeyGenerator.getInstance("HmacS256");
+            KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
             SecretKey sk = keyGen.generateKey();
             secretkey = Base64.getEncoder().encodeToString(sk.getEncoded());
         } catch (NoSuchAlgorithmException e) {
@@ -34,18 +34,18 @@ public class JWTService {
 
 
 
-    public String generateToken(String email) {
+    public String generateToken(String email ,Map<String,Object> user) {
         Map<String,Object> claims=new HashMap<>();
        
         
         return Jwts.builder()
-        .claims(claims)
+        .claims(user)
         .subject(email)
         .header().empty().add("type", "jwt")
         .and()
         .issuedAt(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis()+ 60 * 60 * 1000))
-        .signWith(getKey())
+        .signWith(getKey(), Jwts.SIG.HS256)
                 .compact();
             
               
@@ -54,9 +54,10 @@ public class JWTService {
         
             private SecretKey getKey() {
                 byte[] keyBytes = Decoders.BASE64.decode(secretkey);
-                return Keys.hmacShaKeyFor(keyBytes);
-                // secretkey.getBytes()
+                System.out.println("key is :"+Keys.hmacShaKeyFor(keyBytes)+"its over");
+                return Keys.hmacShaKeyFor(keyBytes);  // ✅ HMAC-SHA key
             }
+            
         
              public String extractUserName(String token) {
         // extract the username from jwt token
