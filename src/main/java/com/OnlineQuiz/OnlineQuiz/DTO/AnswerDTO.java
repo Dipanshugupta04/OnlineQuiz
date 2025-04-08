@@ -1,11 +1,12 @@
 package com.OnlineQuiz.OnlineQuiz.DTO;
-
+// Answer Data transfer object
 public class AnswerDTO {
     private String answerText;
-    private boolean correctAnswer; // ✅ Fix: Ensures correct answer info
+    private boolean correctAnswer; // Fix: Ensures correct answer info
 
     // Constructor
-    public AnswerDTO() {}
+    public AnswerDTO() {
+    }
 
     public AnswerDTO(String answerText, boolean correctAnswer) {
         this.answerText = answerText;
@@ -21,7 +22,7 @@ public class AnswerDTO {
         this.answerText = answerText;
     }
 
-    public boolean isCorrectAnswer() {  
+    public boolean isCorrectAnswer() {
         return correctAnswer;
     }
 

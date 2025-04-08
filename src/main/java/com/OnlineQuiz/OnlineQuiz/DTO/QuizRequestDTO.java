@@ -1,11 +1,11 @@
 package com.OnlineQuiz.OnlineQuiz.DTO;
 
 import java.util.List;
-
+//Quiz Request Data Transfer Object
 public class QuizRequestDTO {
     private String title;
     private String userName;
-    private List<QuestionDTO> questions;  
+    private List<QuestionDTO> questions;
 
     public String getTitle() {
         return title;

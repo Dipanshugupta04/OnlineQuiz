@@ -95,8 +95,39 @@ public class JWTService {
     public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
     }
+
+
+
+
+    public String GenerateToken(String email) {
+       
+            Map<String,Object> claims=new HashMap<>();
+           
+            
+            return Jwts.builder()
+            .claims(claims)
+            .subject(email)
+            .header().empty().add("type", "jwt")
+            .and()
+            .issuedAt(new Date(System.currentTimeMillis()))
+            .expiration(new Date(System.currentTimeMillis()+ 60 * 60 * 1000))
+            .signWith(GetKey(), Jwts.SIG.HS256)
+                    .compact();
+                
+                  
+                }
+        
+            
+                private SecretKey GetKey() {
+                    byte[] keyBytes = Decoders.BASE64.decode(secretkey);
+                    System.out.println("key is :"+Keys.hmacShaKeyFor(keyBytes)+"its over");
+                    return Keys.hmacShaKeyFor(keyBytes);  // ✅ HMAC-SHA key
+                }
+
+            
+                
+    }
     
-}
 
 
 

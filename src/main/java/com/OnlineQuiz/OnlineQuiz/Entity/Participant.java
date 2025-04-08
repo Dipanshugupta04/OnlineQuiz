@@ -1,7 +1,7 @@
 package com.OnlineQuiz.OnlineQuiz.Entity;
 
 import jakarta.persistence.*;
-
+//Entity for Paticipant
 @Entity
 public class Participant {
     @Id
@@ -15,12 +15,27 @@ public class Participant {
     private RoomId room;
 
     // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getParticipantName() { return participantName; }
-    public void setParticipantName(String participantName) { this.participantName = participantName; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public RoomId getRoom() { return room; }
-    public void setRoom(RoomId room) { this.room = room; }
+    public String getParticipantName() {
+        return participantName;
+    }
+
+    public void setParticipantName(String participantName) {
+        this.participantName = participantName;
+    }
+
+    public RoomId getRoom() {
+        return room;
+    }
+
+    public void setRoom(RoomId room) {
+        this.room = room;
+    }
 }
