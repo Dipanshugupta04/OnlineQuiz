@@ -30,7 +30,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/auth/google", "/api/auth/**", "/api/register", "/api/login").permitAll() // adjust
+                        .requestMatchers("/quiz/create","/auth/google", "/api/auth/**", "/api/register", "/api/login").permitAll() // adjust
                                                                                                                     // as
                                                                                                                     // needed
                         .anyRequest().authenticated())

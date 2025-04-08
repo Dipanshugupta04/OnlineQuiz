@@ -2,18 +2,15 @@
     "roomId": "ABC123",
     "title": "Java Basics",
     "questions": [
-        {
-            "questionText": "What is Java?",
-            "options": [
-                { "optionText": "A programming language", "CorrectOption": true },
-                { "optionText": "A coffee brand", "CorrectOption": false },
-                { "optionText": "A type of snake", "CorrectOption": false },
-                { "optionText": "None of these", "CorrectOption": false }
-            ]
-        }
+      {
+        "questionText": "What is Java?",
+        "answers": [
+          { "answerText": "A programming language", "correctAnswer": true },
+          { "answerText": "A coffee brand", "correctAnswer": false },
+          { "answerText": "A type of snake", "correctAnswer": false },
+          { "answerText": "None of these", "correctAnswer": false }
+        ]
+      }
     ]
-}
-
-
-
-
+  }
+  
