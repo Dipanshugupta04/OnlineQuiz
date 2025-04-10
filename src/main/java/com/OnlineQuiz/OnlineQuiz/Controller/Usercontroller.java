@@ -2,15 +2,10 @@
 package com.OnlineQuiz.OnlineQuiz.Controller;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,10 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.Authentication;
 
 import com.OnlineQuiz.OnlineQuiz.Entity.User;
-import com.OnlineQuiz.OnlineQuiz.Entity.UserPrincipal;
-import com.OnlineQuiz.OnlineQuiz.Reposistory.UserRepository;
 import com.OnlineQuiz.OnlineQuiz.Service.AuthService;
-import com.OnlineQuiz.OnlineQuiz.Service.CustomUserDetailsService;
 import com.OnlineQuiz.OnlineQuiz.Service.JWTService;
 
 @CrossOrigin(origins = { "http://127.0.0.1:5501", "http://localhost:5501" })
@@ -47,23 +39,8 @@ public class Usercontroller {
         if (authentication == null || authentication.getPrincipal() == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
         }
-        
+
         String username = authentication.getName();
-        
-        
-
-        // Object principal = authentication.getPrincipal();
-        // Map<String, Object> userInfo = new HashMap<>();
-
-        // if (principal instanceof OAuth2User oauthUser) {
-        //     userInfo = oauthUser.getAttributes();
-        // } else if (principal instanceof UserPrincipal userDetails) {
-        //     userInfo.put("username", userDetails.getUsername());
-        //     userInfo.put("email", userDetails.getEmail());
-        //     // Add more fields if needed
-        // } else {
-        //     userInfo.put("username", principal.toString());
-        // }
 
         return ResponseEntity.ok(username);
     }
