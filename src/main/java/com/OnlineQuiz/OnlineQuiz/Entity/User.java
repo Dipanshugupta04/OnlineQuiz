@@ -29,6 +29,12 @@ public class User implements UserDetails {
     private String pictureUrl;
    
     private String role;
+    private String UNIQUE_ID;
+
+    
+
+   
+    
 
     public Long getId() {
         return id;
@@ -114,5 +120,13 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public String getUNIQUE_ID() {
+        return UNIQUE_ID;
+    }
+
+    public void setUNIQUE_ID(String uNIQUE_ID) {
+        UNIQUE_ID = uNIQUE_ID;
     }
 }

@@ -57,5 +57,12 @@ public Collection<? extends GrantedAuthority> getAuthorities() {
        
         return true;
     }
+
+
+
+    public Object getEmail() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getEmail'");
+    }
     
 }

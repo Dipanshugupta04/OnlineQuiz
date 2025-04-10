@@ -1,5 +1,9 @@
 package com.OnlineQuiz.OnlineQuiz.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,10 +36,16 @@ public class AuthService {
     }
 
     public String verify(User user) {
+        User user1=new User();
+        List<String> details=new ArrayList<>();
         Authentication authentication = authManager
                 .authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
         if (authentication.isAuthenticated()) {
-            return jwtService.GenerateToken(user.getEmail());
+            String jwt= jwtService.GenerateToken(user.getEmail());
+            details.add(jwt);
+            details.add(user1.getUNIQUE_ID());
+            System.out.println(jwt);
+           return jwt;
         } else {
             return "fail";
         }
@@ -51,7 +61,8 @@ public class AuthService {
         if (!user.getPassword().equals(user.getConfirmPassword())) {
             throw new IllegalArgumentException("Passwords do not match");
         }
-
+         String UNIQUE_ID="#" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+         user.setUNIQUE_ID(UNIQUE_ID);
         user.setRole(role.User);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setConfirmPassword(passwordEncoder.encode(user.getConfirmPassword()));

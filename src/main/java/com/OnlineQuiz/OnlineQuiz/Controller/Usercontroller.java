@@ -1,8 +1,11 @@
 
 package com.OnlineQuiz.OnlineQuiz.Controller;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.Authentication;
 
 import com.OnlineQuiz.OnlineQuiz.Entity.User;
+import com.OnlineQuiz.OnlineQuiz.Entity.UserPrincipal;
+import com.OnlineQuiz.OnlineQuiz.Reposistory.UserRepository;
 import com.OnlineQuiz.OnlineQuiz.Service.AuthService;
 import com.OnlineQuiz.OnlineQuiz.Service.CustomUserDetailsService;
 import com.OnlineQuiz.OnlineQuiz.Service.JWTService;
@@ -42,27 +47,34 @@ public class Usercontroller {
         if (authentication == null || authentication.getPrincipal() == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
         }
+        
+        String username = authentication.getName();
+        
+        
 
-        Object principal = authentication.getPrincipal();
-        Map<String, Object> userInfo = new HashMap<>();
+        // Object principal = authentication.getPrincipal();
+        // Map<String, Object> userInfo = new HashMap<>();
 
-        if (principal instanceof OAuth2User oauthUser) {
-            userInfo = oauthUser.getAttributes();
-        } else if (principal instanceof CustomUserDetailsService userDetails) {
-            userInfo.put("username", userDetails.getUsername());
-            userInfo.put("email", userDetails.getEmail());
-            // Add more fields if needed
-        } else {
-            userInfo.put("username", principal.toString());
-        }
+        // if (principal instanceof OAuth2User oauthUser) {
+        //     userInfo = oauthUser.getAttributes();
+        // } else if (principal instanceof UserPrincipal userDetails) {
+        //     userInfo.put("username", userDetails.getUsername());
+        //     userInfo.put("email", userDetails.getEmail());
+        //     // Add more fields if needed
+        // } else {
+        //     userInfo.put("username", principal.toString());
+        // }
 
-        return ResponseEntity.ok(userInfo);
+        return ResponseEntity.ok(username);
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody User user) {
-
-        return authService.verify(user);
+    public ResponseEntity<?> login(@RequestBody User user) {
+        String token = authService.verify(user);
+        if ("fail".equals(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+        }
+        return ResponseEntity.ok(Collections.singletonMap("token", token));
     }
 
     @PostMapping("/register")

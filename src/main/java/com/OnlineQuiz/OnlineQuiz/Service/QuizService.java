@@ -2,6 +2,7 @@ package com.OnlineQuiz.OnlineQuiz.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.OnlineQuiz.OnlineQuiz.DTO.AnswerDTO;
+import com.OnlineQuiz.OnlineQuiz.DTO.AnswerSubmissionDTO;
 import com.OnlineQuiz.OnlineQuiz.DTO.QuestionDTO;
 import com.OnlineQuiz.OnlineQuiz.DTO.QuizRequestDTO;
+import com.OnlineQuiz.OnlineQuiz.DTO.QuizSubmissionDTO;
+import com.OnlineQuiz.OnlineQuiz.DTO.ResultDTO;
 import com.OnlineQuiz.OnlineQuiz.Entity.CorrectOption;
 import com.OnlineQuiz.OnlineQuiz.Entity.Option;
 import com.OnlineQuiz.OnlineQuiz.Entity.Question;
@@ -101,7 +105,7 @@ public class QuizService {
     
         String roomCode;
         do {
-            roomCode = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+            roomCode =  UUID.randomUUID().toString().substring(0, 6).toUpperCase();
         } while (roomIdRepository.findByRoomCode(roomCode).isPresent());
     
         RoomId roomId = new RoomId();
@@ -114,6 +118,24 @@ public class QuizService {
     
         return roomId;
     }
+// After submission to evaluate the marks
+public ResultDTO evaluateSubmission(QuizSubmissionDTO submission) {
+    int total = submission.getAnswers().size();
+    int correct = 0;
+
+    for (AnswerSubmissionDTO answer : submission.getAnswers()) {
+        Optional<CorrectOption> correctOption = correctOptionRepository
+            .findByQuestionIdAndOptionId(answer.getQuestionId(), answer.getSelectedOptionId());
+
+        if (correctOption.isPresent()) correct++;
+    }
+
+    double percentage = (correct * 100.0) / total;
+
+    return new ResultDTO(total, correct, percentage);
+}
+
+
     
     public List<Question> getQuestionsByRoomCode(String roomCode) {
         RoomId room = roomIdRepository.findByRoomCode(roomCode)

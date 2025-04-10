@@ -30,13 +30,14 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/quiz/create","/auth/google", "/api/auth/**", "/api/register", "/api/login").permitAll() // adjust
+                        .requestMatchers("/quiz/create","/auth/google", "/api/auth/**", "/api/register", "/api/login","/api/home").permitAll() // adjust
                                                                                                                     // as
                                                                                                                     // needed
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .formLogin(Customizer.withDefaults())
+                // .formLogin(Customizer.withDefaults())
+                // .formLogin(form -> form.disable())
                 .oauth2Login(Customizer.withDefaults())
                 .logout(logout -> logout
                         .logoutSuccessUrl("/")

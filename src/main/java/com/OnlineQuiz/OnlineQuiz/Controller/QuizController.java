@@ -3,9 +3,12 @@ package com.OnlineQuiz.OnlineQuiz.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.OnlineQuiz.OnlineQuiz.DTO.QuizRequestDTO;
+import com.OnlineQuiz.OnlineQuiz.DTO.QuizSubmissionDTO;
+import com.OnlineQuiz.OnlineQuiz.DTO.ResultDTO;
 import com.OnlineQuiz.OnlineQuiz.Entity.Exam;
 import com.OnlineQuiz.OnlineQuiz.Entity.Question;
 import com.OnlineQuiz.OnlineQuiz.Entity.Quiz;
@@ -42,6 +45,12 @@ private ExamRepository examRepository;
         return examRepository.save(exam);
         
     }
+    @PostMapping("/submit")
+public ResponseEntity<ResultDTO> submitQuiz(@RequestBody QuizSubmissionDTO submission) {
+    ResultDTO result = quizService.evaluateSubmission(submission);
+    return ResponseEntity.ok(result);
+}
+
 
     @GetMapping("/home")
     public String homString() {

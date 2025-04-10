@@ -1,7 +1,10 @@
 package com.OnlineQuiz.OnlineQuiz.Controller;
 
+import com.OnlineQuiz.OnlineQuiz.Entity.User;
 import com.OnlineQuiz.OnlineQuiz.Service.GoogleAuthService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +22,16 @@ public class AuthController {
 
     @PostMapping("/google")
     public ResponseEntity<?> loginWithGoogle(@RequestBody Map<String, String> request) {
-
+        User user = new User();
+        List<String> jwtdetails=new ArrayList<>();
         String idToken = request.get("idToken");
         System.out.println(idToken);
         String jwtToken = googleAuthService.verifyAndAuthenticateUser(idToken);
-        System.out.println(jwtToken);
-        return ResponseEntity.ok(Map.of("jwt", jwtToken));
+        jwtdetails.add(jwtToken);
+        jwtdetails.add(user.getUNIQUE_ID())
+;        System.out.println(jwtToken);
+System.out.println("jwt token"+jwtToken);
+System.out.println("TEST:="+jwtdetails);
+        return ResponseEntity.ok(jwtdetails);
     }
 }
