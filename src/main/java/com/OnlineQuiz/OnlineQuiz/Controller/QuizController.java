@@ -24,6 +24,7 @@ import com.OnlineQuiz.OnlineQuiz.Reposistory.UserRepository;
 import com.OnlineQuiz.OnlineQuiz.Reposistory.roomIdRepository;
 import com.OnlineQuiz.OnlineQuiz.Service.QuizService;
 
+
 @RestController
 @RequestMapping("/quiz")
 // Quiz Controller
@@ -74,7 +75,8 @@ public class QuizController {
 
         Optional<User> userOpt = userRepository.findByEmail(email);
         if (userOpt.isEmpty()) {
-            return ResponseEntity.status(404).body(Map.of("status", "error", "message", "User not found"));
+            return ResponseEntity.status(404)
+            .body(Map.of("status", "error", "message", "User not found"));
         }
 
         RoomId room = roomOpt.get();
@@ -100,10 +102,28 @@ public class QuizController {
         response.put("message", "Joined quiz successfully");
         response.put("roomCode", room.getRoomCode());
         response.put("participantName", user.getName());
+        response.put("quiz", quizService.getQuestionsByRoomCode(roomCode));
+        // System.out.println(response);
 
         return ResponseEntity.ok(response);
 
     }
+    @PutMapping("/leave/{email}")
+    public ResponseEntity<String> leaveRoom(@PathVariable String email) {
+        System.out.println(email);
+        Optional<Participant> userEmail = participantRepo.findByEmail(email);
+        
+        if (userEmail.isEmpty()) {
+            return ResponseEntity.status(404).body("User not found");
+        }
+    
+        Participant participant = userEmail.get();
+        participantRepo.deleteById(participant.getId());
+    
+        return ResponseEntity.ok("Participant removed successfully");
+    }
+    
+
 
     @PostMapping("/submit")
     public ResponseEntity<ResultDTO> submitQuiz(@RequestBody QuizSubmissionDTO submission) {

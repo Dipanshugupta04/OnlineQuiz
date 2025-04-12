@@ -9,7 +9,7 @@ public class Participant {
     private Long id;
 
     private String participantName;
-    private String ParticipantEmail;
+    private String email;
 
     @ManyToOne
     @JoinColumn(name = "room_id")
@@ -21,11 +21,11 @@ public class Participant {
     }
 
     public String getParticipantEmail() {
-        return ParticipantEmail;
+        return email;
     }
 
-    public void setParticipantEmail(String participantEmail) {
-        ParticipantEmail = participantEmail;
+    public void setParticipantEmail(String email) {
+        this.email = email;
     }
 
     public void setId(Long id) {
