@@ -68,7 +68,8 @@ public class QuizController {
 
         Optional<RoomId> roomOpt = roomRepository.findByRoomCode(roomCode);
         if (roomOpt.isEmpty()) {
-            return ResponseEntity.status(404).body(Map.of("status", "error", "message", "Room not found"));
+            return ResponseEntity.status(404)
+            .body(Map.of("status", "error", "message", "Room Code Is Not Match"));
         }
 
         Optional<User> userOpt = userRepository.findByEmail(email);
@@ -89,6 +90,7 @@ public class QuizController {
 
         Participant participant = new Participant();
         participant.setParticipantName(user.getName());
+        participant.setParticipantEmail(user.getEmail());
         participant.setRoom(room);
 
         participantRepo.save(participant);
@@ -100,6 +102,7 @@ public class QuizController {
         response.put("participantName", user.getName());
 
         return ResponseEntity.ok(response);
+
     }
 
     @PostMapping("/submit")
