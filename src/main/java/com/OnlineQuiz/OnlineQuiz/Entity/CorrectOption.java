@@ -1,6 +1,7 @@
 package com.OnlineQuiz.OnlineQuiz.Entity;
 
 import jakarta.persistence.*;
+
 //Correct Answer Entity
 @Entity
 public class CorrectOption {

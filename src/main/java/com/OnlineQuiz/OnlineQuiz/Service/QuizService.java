@@ -111,6 +111,7 @@ public class QuizService {
         RoomId roomId = new RoomId();
         roomId.setRoomCode(roomCode);
         roomId.setQuiz(quiz);
+        roomId.setStatus("WA");
     
         roomId = roomIdRepository.save(roomId);
         quiz.setRoomId(roomId);

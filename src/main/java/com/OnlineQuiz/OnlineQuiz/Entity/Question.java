@@ -3,6 +3,7 @@ package com.OnlineQuiz.OnlineQuiz.Entity;
 import java.util.ArrayList;
 import java.util.List;
 import jakarta.persistence.*;
+
 //Entity for Question
 @Entity
 public class Question {

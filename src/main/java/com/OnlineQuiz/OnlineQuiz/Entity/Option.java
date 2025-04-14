@@ -1,6 +1,7 @@
 package com.OnlineQuiz.OnlineQuiz.Entity;
 
 import jakarta.persistence.*;
+
 //Entity for option
 @Entity
 @Table(name = "option_table")

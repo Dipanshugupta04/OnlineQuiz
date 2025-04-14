@@ -12,12 +12,12 @@ public class Quiz {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     private String title; // Quiz Paper Name
-    private String userName; 
+    private String userName;
 
     @CreationTimestamp
-    @Column(updatable = false)  
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
@@ -30,24 +30,59 @@ public class Quiz {
     private RoomId roomId;
 
     // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getUserName() { return userName; }
-    public void setUserName(String userName) { this.userName = userName; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    public String getUserName() {
+        return userName;
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+    public String getTitle() {
+        return title;
+    }
 
-    public List<Question> getQuestions() { return questions; }
-    public void setQuestions(List<Question> questions) { this.questions = questions; }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    public RoomId getRoomId() { return roomId; }
-    public void setRoomId(RoomId roomId) { this.roomId = roomId; }
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public List<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
+    }
+
+    public RoomId getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(RoomId roomId) {
+        this.roomId = roomId;
+    }
 }

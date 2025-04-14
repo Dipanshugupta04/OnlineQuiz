@@ -51,16 +51,16 @@
 			<artifactId>mysql-connector-j</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-<dependency>
-    <groupId>com.google.http-client</groupId>
-    <artifactId>google-http-client-gson</artifactId>
-    <version>1.39.2</version>
-</dependency>
-<dependency>
-        <groupId>com.google.api-client</groupId>
-        <artifactId>google-api-client</artifactId>
-        <version>2.2.0</version>
-    </dependency>
+		<dependency>
+			<groupId>com.google.http-client</groupId>
+			<artifactId>google-http-client-gson</artifactId>
+			<version>1.39.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.api-client</groupId>
+			<artifactId>google-api-client</artifactId>
+			<version>2.2.0</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -94,7 +94,22 @@
 			<version>0.12.6</version>
 			<scope>runtime</scope>
 		</dependency>
+		<!-- Spring Boot WebSocket: Provides support for WebSocket in Spring Boot -->
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-websocket -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
+			<version>3.3.4</version>
+		</dependency>
 
+
+		<!-- Jackson: For JSON handling in the WebSocket messages -->
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.18.2</version>
+		</dependency>
 
 	</dependencies>
 

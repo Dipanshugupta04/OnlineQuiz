@@ -32,3 +32,42 @@ public class QuizService {
         }
     }
 }
+
+
+
+
+
+
+//Web socket java script
+// Create a new WebSocket connection
+var socket = new SockJS('/quiz-websocket');
+var stompClient = Stomp.over(socket);
+
+// Connect to WebSocket server
+stompClient.connect({}, function (frame) {
+    console.log('Connected: ' + frame);
+
+    // Subscribe to the quiz topic for a specific room
+    stompClient.subscribe('/topic/quiz/{roomCode}', function (response) {
+        // Handle the response from the server (quiz data)
+        var quizData = JSON.parse(response.body);
+        console.log(quizData);
+        // Update the UI with quiz questions and options
+    });
+});
+
+// Send a message to start the quiz (when the creator clicks the "Send" button)
+function sendQuizToParticipants(roomCode) {
+    fetch('/send', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ roomCode: roomCode })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data.message);
+    });
+}
+

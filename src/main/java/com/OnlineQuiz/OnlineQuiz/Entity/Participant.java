@@ -1,6 +1,7 @@
 package com.OnlineQuiz.OnlineQuiz.Entity;
 
 import jakarta.persistence.*;
+
 //Entity for Paticipant
 @Entity
 public class Participant {
