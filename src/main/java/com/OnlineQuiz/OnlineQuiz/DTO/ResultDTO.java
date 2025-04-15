@@ -10,19 +10,12 @@ public class ResultDTO {
         this.score = score;
         this.percentage = percentage;
     }
-    
-    
-    
-    // Getters and Setters
 
-    
+    // Getters and Setters
 
     public int getTotal() {
         return total;
     }
-
-  
-
 
     public void setTotal(int total) {
         this.total = total;
@@ -43,8 +36,5 @@ public class ResultDTO {
     public void setPercentage(double percentage) {
         this.percentage = percentage;
     }
-
-
-    
 
 }

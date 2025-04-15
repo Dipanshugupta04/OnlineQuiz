@@ -1,6 +1,5 @@
 package com.OnlineQuiz.OnlineQuiz.Service;
 
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -16,12 +15,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+
 @Service
 public class JWTService {
 
-    private  String secretkey = "";
-    public JWTService(){
-        
+    private String secretkey = "";
+
+    public JWTService() {
+
         try {
             KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
             SecretKey sk = keyGen.generateKey();
@@ -31,35 +32,28 @@ public class JWTService {
         }
     }
 
+    public String generateToken(String email, Map<String, Object> user) {
+        Map<String, Object> claims = new HashMap<>();
 
-
-
-    public String generateToken(String email ,Map<String,Object> user) {
-        Map<String,Object> claims=new HashMap<>();
-       
-        
         return Jwts.builder()
-        .claims(user)
-        .subject(email)
-        .header().empty().add("type", "jwt")
-        .and()
-        .issuedAt(new Date(System.currentTimeMillis()))
-        .expiration(new Date(System.currentTimeMillis()+ 60 * 60 * 1000))
-        .signWith(getKey(), Jwts.SIG.HS256)
+                .claims(user)
+                .subject(email)
+                .header().empty().add("type", "jwt")
+                .and()
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
+                .signWith(getKey(), Jwts.SIG.HS256)
                 .compact();
-            
-              
-            }
-    
-        
-            private SecretKey getKey() {
-                byte[] keyBytes = Decoders.BASE64.decode(secretkey);
-                System.out.println("key is :"+Keys.hmacShaKeyFor(keyBytes)+"its over");
-                return Keys.hmacShaKeyFor(keyBytes);  // ✅ HMAC-SHA key
-            }
-            
-        
-             public String extractUserName(String token) {
+
+    }
+
+    private SecretKey getKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(secretkey);
+        System.out.println("key is :" + Keys.hmacShaKeyFor(keyBytes) + "its over");
+        return Keys.hmacShaKeyFor(keyBytes); // ✅ HMAC-SHA key
+    }
+
+    public String extractUserName(String token) {
         // extract the username from jwt token
         return extractClaim(token, Claims::getSubject);
     }
@@ -90,48 +84,30 @@ public class JWTService {
         return extractClaim(token, Claims::getExpiration);
     }
 
-
-
     public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-
-
-
     public String GenerateToken(String email) {
-       
-            Map<String,Object> claims=new HashMap<>();
-           
-            
-            return Jwts.builder()
-            .claims(claims)
-            .subject(email)
-            .header().empty().add("type", "jwt")
-            .and()
-            .issuedAt(new Date(System.currentTimeMillis()))
-            .expiration(new Date(System.currentTimeMillis()+ 60 * 60 * 1000))
-            .signWith(GetKey(), Jwts.SIG.HS256)
-                    .compact();
-                
-                  
-                }
-        
-            
-                private SecretKey GetKey() {
-                    byte[] keyBytes = Decoders.BASE64.decode(secretkey);
-                    System.out.println("key is :"+Keys.hmacShaKeyFor(keyBytes)+"its over");
-                    return Keys.hmacShaKeyFor(keyBytes);  // ✅ HMAC-SHA key
-                }
 
-            
-                
+        Map<String, Object> claims = new HashMap<>();
+
+        return Jwts.builder()
+                .claims(claims)
+                .subject(email)
+                .header().empty().add("type", "jwt")
+                .and()
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
+                .signWith(GetKey(), Jwts.SIG.HS256)
+                .compact();
+
     }
-    
 
+    private SecretKey GetKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(secretkey);
+        System.out.println("key is :" + Keys.hmacShaKeyFor(keyBytes) + "its over");
+        return Keys.hmacShaKeyFor(keyBytes); // ✅ HMAC-SHA key
+    }
 
-
-
-
-    
-
+}

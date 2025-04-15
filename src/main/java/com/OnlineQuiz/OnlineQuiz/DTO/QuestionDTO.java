@@ -2,6 +2,7 @@ package com.OnlineQuiz.OnlineQuiz.DTO;
 
 import java.util.ArrayList;
 import java.util.List;
+
 //Question Data Transfer Object
 public class QuestionDTO {
     private String questionText;

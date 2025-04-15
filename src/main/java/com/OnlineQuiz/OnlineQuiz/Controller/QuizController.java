@@ -44,21 +44,25 @@ public class QuizController {
     @Autowired
     private ParticipantRepo participantRepo;
 
+    // Controller for create quiz
     @PostMapping("/create")
     public Quiz createQuiz(@RequestBody QuizRequestDTO quizDTO) {
         return quizService.createQuiz(quizDTO);
     }
 
+    // Controller for Generate Room id for quiz
     @PostMapping("/generate-room/{quiz_Id}")
     public RoomId generateRoomId(@PathVariable Long quiz_Id) {
         return quizService.generateRoomId(quiz_Id);
     }
 
+    // Controller for show the quiz question using roomcode
     @GetMapping("/questions/{roomCode}")
     public List<Question> getQuestionsByRoomCode(@PathVariable String roomCode) {
         return quizService.getQuestionsByRoomCode(roomCode);
     }
 
+    // Controller for create exam details
     @PostMapping("/exam/create")
     public ResponseEntity<?> createExam(@RequestBody Exam exam) {
         exam.setStartDateTime(LocalDateTime.now());
@@ -68,6 +72,7 @@ public class QuizController {
                         saved.getEndDateTime()));
     }
 
+    // Controller for join room
     @PostMapping("/join-room")
     public ResponseEntity<Map<String, Object>> joinQuiz(@RequestBody Map<String, String> request) {
         String roomCode = request.get("roomCode");
@@ -148,6 +153,7 @@ public class QuizController {
 
     }
 
+    // Controller for leave the quiz
     @PutMapping("/leave/{email}")
     public ResponseEntity<String> leaveRoom(@PathVariable String email) {
         System.out.println(email);
@@ -163,12 +169,14 @@ public class QuizController {
         return ResponseEntity.ok("Participant removed successfully");
     }
 
+    // Controller for submit the user quiz answer response
     @PostMapping("/submit")
     public ResponseEntity<ResultDTO> submitQuiz(@RequestBody QuizSubmissionDTO submission) {
         ResultDTO result = quizService.evaluateSubmission(submission);
         return ResponseEntity.ok(result);
     }
 
+    // Controller for testing
     @GetMapping("/home")
     public String homString() {
         return "this is home";

@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.OnlineQuiz.OnlineQuiz.Entity.Option;
 
 @Repository
-public interface optionRepository  extends JpaRepository<Option,Long>{
+public interface optionRepository extends JpaRepository<Option, Long> {
 
 }

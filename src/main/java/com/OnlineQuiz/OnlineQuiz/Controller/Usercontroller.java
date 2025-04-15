@@ -34,6 +34,7 @@ public class Usercontroller {
     @Autowired
     private JWTService jwtService;
 
+    // Controller for fetch the user in database
     @GetMapping("/user")
     public ResponseEntity<?> getUserDetails(Authentication authentication) {
         if (authentication == null || authentication.getPrincipal() == null) {
@@ -45,6 +46,7 @@ public class Usercontroller {
         return ResponseEntity.ok(username);
     }
 
+    // Controller for login
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
         String token = authService.verify(user);
@@ -54,6 +56,7 @@ public class Usercontroller {
         return ResponseEntity.ok(Collections.singletonMap("token", token));
     }
 
+    // Controller for Register
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Validated @RequestBody User user, BindingResult result) {
         if (result.hasErrors()) {
@@ -75,6 +78,7 @@ public class Usercontroller {
         return "hello";
     }
 
+    // Controller for access protected
     @GetMapping("/protected")
     public ResponseEntity<?> getProtectedData(@RequestHeader("Authorization") String token) {
         // Validate token

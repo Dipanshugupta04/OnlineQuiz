@@ -28,39 +28,39 @@ import com.OnlineQuiz.OnlineQuiz.Reposistory.correctOptionRepository;
 
 @Service
 public class QuizService {
-  
+
     @Autowired
     private quizRepository quizRepository;
-    
+
     @Autowired
     private roomIdRepository roomIdRepository;
-    
+
     @Autowired
     private questionRepository questionRepository;
-    
+
     @Autowired
     private optionRepository optionRepository;
-    
+
     @Autowired
     private correctOptionRepository correctOptionRepository;
-    
+
     @Transactional
     public Quiz createQuiz(QuizRequestDTO quizDTO) {
         Quiz quiz = new Quiz();
         quiz.setTitle(quizDTO.getTitle());
         quiz.setUserName(quizDTO.getUserName());
         quiz = quizRepository.save(quiz);
-    
+
         List<Question> questionList = new ArrayList<>();
-    
+
         for (QuestionDTO questionDTO : quizDTO.getQuestions()) {
             Question question = new Question();
             question.setQuestionText(questionDTO.getQuestionText());
             question.setQuiz(quiz);
             question = questionRepository.save(question);
-    
+
             List<Option> savedOptions = new ArrayList<>();
-    
+
             for (AnswerDTO answerDTO : questionDTO.getAnswers()) {
                 Option option = new Option();
                 option.setOptionText(answerDTO.getAnswerText());
@@ -68,11 +68,11 @@ public class QuizService {
                 option = optionRepository.save(option);
                 savedOptions.add(option);
             }
-    
+
             question.setOptions(savedOptions);
-    
+
             List<CorrectOption> correctOptions = new ArrayList<>();
-    
+
             for (AnswerDTO answerDTO : questionDTO.getAnswers()) {
                 if (answerDTO.isCorrectAnswer()) {
                     for (Option option : savedOptions) {
@@ -87,62 +87,62 @@ public class QuizService {
                     }
                 }
             }
-    
+
             question.setCorrectOptions(correctOptions);
             question = questionRepository.save(question);
             questionList.add(question);
         }
-    
+
         quiz.setQuestions(questionList);
         quiz = quizRepository.save(quiz);
-    
+
         return quiz;
     }
-    
+
     public RoomId generateRoomId(Long quiz_Id) {
         Quiz quiz = quizRepository.findById(quiz_Id)
                 .orElseThrow(() -> new RuntimeException("Quiz not found"));
-    
+
         String roomCode;
         do {
-            roomCode =  UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+            roomCode = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
         } while (roomIdRepository.findByRoomCode(roomCode).isPresent());
-    
+
         RoomId roomId = new RoomId();
         roomId.setRoomCode(roomCode);
         roomId.setQuiz(quiz);
         roomId.setStatus("WA");
-    
+
         roomId = roomIdRepository.save(roomId);
         quiz.setRoomId(roomId);
         quizRepository.save(quiz);
-    
+
         return roomId;
     }
-// After submission to evaluate the marks
-public ResultDTO evaluateSubmission(QuizSubmissionDTO submission) {
-    int total = submission.getAnswers().size();
-    int correct = 0;
 
-    for (AnswerSubmissionDTO answer : submission.getAnswers()) {
-        Optional<CorrectOption> correctOption = correctOptionRepository
-            .findByQuestionIdAndOptionId(answer.getQuestionId(), answer.getSelectedOptionId());
+    // After submission to evaluate the marks
+    public ResultDTO evaluateSubmission(QuizSubmissionDTO submission) {
+        int total = submission.getAnswers().size();
+        int correct = 0;
 
-        if (correctOption.isPresent()) correct++;
+        for (AnswerSubmissionDTO answer : submission.getAnswers()) {
+            Optional<CorrectOption> correctOption = correctOptionRepository
+                    .findByQuestionIdAndOptionId(answer.getQuestionId(), answer.getSelectedOptionId());
+
+            if (correctOption.isPresent())
+                correct++;
+        }
+
+        double percentage = (correct * 100.0) / total;
+
+        return new ResultDTO(total, correct, percentage);
     }
 
-    double percentage = (correct * 100.0) / total;
-
-    return new ResultDTO(total, correct, percentage);
-}
-
-
-    
     public List<Question> getQuestionsByRoomCode(String roomCode) {
         RoomId room = roomIdRepository.findByRoomCode(roomCode)
                 .orElseThrow(() -> new RuntimeException("Room not found with code: " + roomCode));
-    
+
         Quiz quiz = room.getQuiz();
         return quiz.getQuestions();
     }
-}    
+}

@@ -1,4 +1,5 @@
 package com.OnlineQuiz.OnlineQuiz.DTO;
+
 // Answer Data transfer object
 public class AnswerDTO {
     private String answerText;

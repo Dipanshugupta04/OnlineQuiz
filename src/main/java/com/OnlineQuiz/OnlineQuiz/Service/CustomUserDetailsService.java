@@ -19,7 +19,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public CustomUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-    
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<User> userOptional = userRepository.findByEmail(email);
@@ -28,8 +28,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
         return new UserPrincipal(userOptional.get());
     }
-    
-    
 
     public Object getEmail() {
         // TODO Auto-generated method stub

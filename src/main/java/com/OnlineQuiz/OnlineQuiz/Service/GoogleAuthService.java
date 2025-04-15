@@ -1,6 +1,5 @@
 package com.OnlineQuiz.OnlineQuiz.Service;
 
-
 import com.OnlineQuiz.OnlineQuiz.DTO.Role;
 import com.OnlineQuiz.OnlineQuiz.Entity.User;
 import com.OnlineQuiz.OnlineQuiz.Reposistory.UserRepository;
@@ -54,7 +53,7 @@ public class GoogleAuthService {
             newUser.setName(name);
             newUser.setPictureUrl(pictureUrl);
             newUser.setRole(role.User);
-            String password=(UUID.randomUUID().toString());
+            String password = (UUID.randomUUID().toString());
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             newUser.setPassword(passwordEncoder.encode(password));
             newUser.setConfirmPassword(passwordEncoder.encode(password));
@@ -62,7 +61,6 @@ public class GoogleAuthService {
         }
 
         // Generate JWT Token
-        return jwtService.generateToken(email,userDetails);
+        return jwtService.generateToken(email, userDetails);
     }
 }
-

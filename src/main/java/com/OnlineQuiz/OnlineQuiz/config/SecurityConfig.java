@@ -25,14 +25,18 @@ public class SecurityConfig {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    // Config for Secuirity
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/quiz/join-room","/quiz/create","/auth/google", "/api/auth/**", "/api/register", "/api/login","/api/home","/quiz/questions/{roomCode}","/quiz/leave/{email}").permitAll() // adjust
-                                                                                                                    // as
-                                                                                                                    // needed
+                        .requestMatchers("/quiz/join-room", "/quiz/create", "/auth/google", "/api/auth/**",
+                                "/api/register", "/api/login", "/api/home", "/quiz/questions/{roomCode}",
+                                "/quiz/leave/{email}")
+                        .permitAll() // adjust
+                        // as
+                        // needed
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

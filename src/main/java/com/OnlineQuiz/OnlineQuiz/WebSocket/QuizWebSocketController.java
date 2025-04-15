@@ -24,6 +24,7 @@ public class QuizWebSocketController {
     @Autowired
     private QuizService quizService;
 
+    // Controller for Websocket where quiz creator send the quiz
     @PostMapping("/send")
     public ResponseEntity<Map<String, Object>> sendQuiz(@RequestBody Map<String, String> request) {
         String roomCode = request.get("roomCode");

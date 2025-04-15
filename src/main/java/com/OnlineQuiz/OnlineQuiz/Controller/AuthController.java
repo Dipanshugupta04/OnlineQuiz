@@ -20,18 +20,19 @@ public class AuthController {
     @Autowired
     private GoogleAuthService googleAuthService;
 
+    // Controller for oauth2
     @PostMapping("/google")
     public ResponseEntity<?> loginWithGoogle(@RequestBody Map<String, String> request) {
         User user = new User();
-        List<String> jwtdetails=new ArrayList<>();
+        List<String> jwtdetails = new ArrayList<>();
         String idToken = request.get("idToken");
         System.out.println(idToken);
         String jwtToken = googleAuthService.verifyAndAuthenticateUser(idToken);
         jwtdetails.add(jwtToken);
-        jwtdetails.add(user.getUNIQUE_ID())
-;        System.out.println(jwtToken);
-System.out.println("jwt token"+jwtToken);
-System.out.println("TEST:="+jwtdetails);
+        jwtdetails.add(user.getUNIQUE_ID());
+        System.out.println(jwtToken);
+        System.out.println("jwt token" + jwtToken);
+        System.out.println("TEST:=" + jwtdetails);
         return ResponseEntity.ok(jwtdetails);
     }
 }
