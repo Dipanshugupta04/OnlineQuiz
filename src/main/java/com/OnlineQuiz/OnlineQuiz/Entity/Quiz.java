@@ -28,7 +28,7 @@ public class Quiz {
 
     @OneToOne(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     private RoomId roomId;
-
+    private String UniqueId;
     // Getters and Setters
     public Long getId() {
         return id;
@@ -85,4 +85,13 @@ public class Quiz {
     public void setRoomId(RoomId roomId) {
         this.roomId = roomId;
     }
+
+    public String getUniqueId() {
+        return UniqueId;
+    }
+
+    public void setUniqueId(String uniqueId) {
+        UniqueId = uniqueId;
+    }
+   
 }

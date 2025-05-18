@@ -49,30 +49,34 @@ public class QuizService {
         Quiz quiz = new Quiz();
         quiz.setTitle(quizDTO.getTitle());
         quiz.setUserName(quizDTO.getUserName());
+        quiz.setUniqueId("#" + UUID.randomUUID().toString().substring(0, 6).toUpperCase());
+        
         quiz = quizRepository.save(quiz);
-
+    
         List<Question> questionList = new ArrayList<>();
-
+    
         for (QuestionDTO questionDTO : quizDTO.getQuestions()) {
             Question question = new Question();
             question.setQuestionText(questionDTO.getQuestionText());
             question.setQuiz(quiz);
+          
             question = questionRepository.save(question);
-
+    
             List<Option> savedOptions = new ArrayList<>();
-
+    
             for (AnswerDTO answerDTO : questionDTO.getAnswers()) {
                 Option option = new Option();
                 option.setOptionText(answerDTO.getAnswerText());
                 option.setQuestion(question);
+               
                 option = optionRepository.save(option);
                 savedOptions.add(option);
             }
-
+    
             question.setOptions(savedOptions);
-
+    
             List<CorrectOption> correctOptions = new ArrayList<>();
-
+    
             for (AnswerDTO answerDTO : questionDTO.getAnswers()) {
                 if (answerDTO.isCorrectAnswer()) {
                     for (Option option : savedOptions) {
@@ -80,6 +84,7 @@ public class QuizService {
                             CorrectOption correctOption = new CorrectOption();
                             correctOption.setQuestion(question);
                             correctOption.setOption(option);
+                            
                             correctOption = correctOptionRepository.save(correctOption);
                             correctOptions.add(correctOption);
                             break;
@@ -87,18 +92,17 @@ public class QuizService {
                     }
                 }
             }
-
+    
             question.setCorrectOptions(correctOptions);
             question = questionRepository.save(question);
             questionList.add(question);
         }
-
+    
         quiz.setQuestions(questionList);
         quiz = quizRepository.save(quiz);
-
+    
         return quiz;
     }
-
     public RoomId generateRoomId(Long quiz_Id) {
         Quiz quiz = quizRepository.findById(quiz_Id)
                 .orElseThrow(() -> new RuntimeException("Quiz not found"));

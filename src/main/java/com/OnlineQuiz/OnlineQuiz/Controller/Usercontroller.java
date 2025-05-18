@@ -21,7 +21,7 @@ import com.OnlineQuiz.OnlineQuiz.Entity.User;
 import com.OnlineQuiz.OnlineQuiz.Service.AuthService;
 import com.OnlineQuiz.OnlineQuiz.Service.JWTService;
 
-@CrossOrigin(origins = { "http://127.0.0.1:5501", "http://localhost:5501" })
+@CrossOrigin(origins = { "http://127.0.0.1:5502", "http://localhost:5502" })
 @RestController
 @RequestMapping("/api")
 
