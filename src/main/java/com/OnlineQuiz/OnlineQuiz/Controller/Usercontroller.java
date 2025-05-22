@@ -2,6 +2,7 @@
 package com.OnlineQuiz.OnlineQuiz.Controller;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,14 +48,22 @@ public class Usercontroller {
     }
 
     // Controller for login
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user) {
-        String token = authService.verify(user);
-        if ("fail".equals(token)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
-        }
-        return ResponseEntity.ok(Collections.singletonMap("token", token));
+   @PostMapping("/login")
+public ResponseEntity<?> login(@RequestBody User user) {
+    String token = authService.verify(user);
+    if ("fail".equals(token)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
     }
+
+    User fullUser = authService.getUserByEmail(user.getEmail());
+
+    Map<String, Object> response = new HashMap<>();
+    response.put("token", token);
+    response.put("user", fullUser);
+
+    return ResponseEntity.ok(response);
+}
+
 
     // Controller for Register
     @PostMapping("/register")
