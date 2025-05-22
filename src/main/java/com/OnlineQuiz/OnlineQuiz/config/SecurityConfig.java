@@ -30,6 +30,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                .cors(Customizer->Customizer.disable())
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/quiz/join-room", "/quiz/create", "/auth/google", "/api/auth/**",
                                 "/api/register", "/api/login", "/api/home", "/quiz/questions/{roomCode}",

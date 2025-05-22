@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = { "http://127.0.0.1:5501", "http://localhost:5501" })
+// @CrossOrigin(origins = { "http://127.0.0.1:5502", "http://localhost:5502" })
+
 @RestController
+@CrossOrigin ("http://127.0.0.1:5502")
 @RequestMapping("/auth")
 // Google Auth Controller
 public class AuthController {

@@ -24,8 +24,9 @@ import com.OnlineQuiz.OnlineQuiz.Reposistory.ParticipantRepo;
 import com.OnlineQuiz.OnlineQuiz.Reposistory.UserRepository;
 import com.OnlineQuiz.OnlineQuiz.Reposistory.roomIdRepository;
 import com.OnlineQuiz.OnlineQuiz.Service.QuizService;
-
+// @CrossOrigin(origins = { "http://127.0.0.1:5502", "http://localhost:5502" })
 @RestController
+@CrossOrigin 
 @RequestMapping("/quiz")
 // Quiz Controller
 public class QuizController {
@@ -65,11 +66,14 @@ public class QuizController {
     // Controller for create exam details
     @PostMapping("/exam/create")
     public ResponseEntity<?> createExam(@RequestBody Exam exam) {
-        exam.setStartDateTime(LocalDateTime.now());
+        // Remove this line to keep the date from the request
+        // exam.setStartDateTime(LocalDateTime.now());
+        
         Exam saved = examRepository.save(exam);
         return ResponseEntity.ok(Map
-                .of("status", "created", "examId", saved.getId(), "startTime", saved.getStartDateTime(), "endTime",
-                        saved.getEndDateTime()));
+                .of("status", "created", "examId", saved.getId(), 
+                    "startTime", saved.getStartDateTime(), 
+                    "endTime", saved.getEndDateTime()));
     }
 
     // Controller for join room

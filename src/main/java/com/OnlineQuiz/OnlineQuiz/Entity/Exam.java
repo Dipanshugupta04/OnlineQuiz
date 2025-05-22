@@ -10,32 +10,56 @@ public class Exam {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "exam_name", nullable = true)
+    @Column(name = "exam_name", nullable = false)
     private String examName;
 
-    @Column(name = "created_by", nullable = true)
+    @Column(name = "created_by", nullable = false)
     private String createdBy;
 
-    @Column(name = "start_date_time", nullable = true)
+    @Column(name = "start_date_time", nullable = false)
     private LocalDateTime startDateTime;
 
-    @Column(name = "end_date_time", nullable = true)
+    @Column(name = "end_date_time", nullable = false)
     private LocalDateTime endDateTime;
 
-    @Column(name = "duration_minutes", nullable = true)
+    @Column(name = "duration_minutes", nullable = false)
     private Integer durationMinutes;
 
     @PrePersist
     @PreUpdate
-    public void setEndTime() {
-        if (startDateTime != null && durationMinutes != null) {
+    public void validateDates() {
+        // First ensure all required fields are set
+        if (startDateTime == null) {
+            throw new IllegalStateException("Start date/time cannot be null");
+        }
+        
+        if (durationMinutes == null || durationMinutes <= 0) {
+            throw new IllegalStateException("Duration must be a positive number");
+        }
+        
+        // Calculate endDateTime if not provided
+        if (endDateTime == null) {
             this.endDateTime = startDateTime.plusMinutes(durationMinutes);
+        }
+        // If both are provided, ensure consistency
+        else if (!endDateTime.equals(startDateTime.plusMinutes(durationMinutes))) {
+            // Adjust duration to match the provided dates
+            this.durationMinutes = (int) java.time.Duration.between(startDateTime, endDateTime).toMinutes();
+        }
+        
+        // Final validation
+        if (endDateTime.isBefore(startDateTime)) {
+            throw new IllegalStateException("End date/time cannot be before start date/time");
         }
     }
 
     // Getters and Setters
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getExamName() {
@@ -77,5 +101,4 @@ public class Exam {
     public void setDurationMinutes(Integer durationMinutes) {
         this.durationMinutes = durationMinutes;
     }
-
 }
