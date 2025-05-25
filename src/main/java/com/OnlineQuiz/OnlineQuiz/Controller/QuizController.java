@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.OnlineQuiz.OnlineQuiz.DTO.ExamDTO;
 import com.OnlineQuiz.OnlineQuiz.DTO.QuizRequestDTO;
 import com.OnlineQuiz.OnlineQuiz.DTO.QuizSubmissionDTO;
 import com.OnlineQuiz.OnlineQuiz.DTO.ResultDTO;
@@ -23,14 +24,16 @@ import com.OnlineQuiz.OnlineQuiz.Reposistory.ExamRepository;
 import com.OnlineQuiz.OnlineQuiz.Reposistory.ParticipantRepo;
 import com.OnlineQuiz.OnlineQuiz.Reposistory.UserRepository;
 import com.OnlineQuiz.OnlineQuiz.Reposistory.roomIdRepository;
+import com.OnlineQuiz.OnlineQuiz.Service.ExamService;
 import com.OnlineQuiz.OnlineQuiz.Service.QuizService;
-// @CrossOrigin(origins = { "http://127.0.0.1:5502", "http://localhost:5502" })
+
 @RestController
-@CrossOrigin 
+
 @RequestMapping("/quiz")
 // Quiz Controller
 public class QuizController {
-
+    @Autowired
+    private ExamService examService;
     // @Autowired
     // private SimpMessagingTemplate messagingTemplate;
     @Autowired
@@ -64,16 +67,24 @@ public class QuizController {
     }
 
     // Controller for create exam details
-    @PostMapping("/exam/create")
-    public ResponseEntity<?> createExam(@RequestBody Exam exam) {
-        // Remove this line to keep the date from the request
-        // exam.setStartDateTime(LocalDateTime.now());
-        
-        Exam saved = examRepository.save(exam);
-        return ResponseEntity.ok(Map
-                .of("status", "created", "examId", saved.getId(), 
-                    "startTime", saved.getStartDateTime(), 
-                    "endTime", saved.getEndDateTime()));
+     @PostMapping("/exam/create")
+    public ResponseEntity<?> createExam(@RequestBody ExamDTO examDTO) {
+        try {
+            Exam exam = examService.createExam(examDTO);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", "success");
+            response.put("examId", exam.getId());
+            response.put("startDateTime", exam.getStartDateTime());
+            response.put("endDateTime", exam.getEndDateTime());
+            
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("status", "error");
+            errorResponse.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
     }
 
     // Controller for join room

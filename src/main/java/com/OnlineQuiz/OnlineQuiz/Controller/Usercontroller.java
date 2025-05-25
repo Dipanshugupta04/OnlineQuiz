@@ -88,13 +88,13 @@ public ResponseEntity<?> login(@RequestBody User user) {
     }
 
     // Controller for access protected
-    @GetMapping("/protected")
-    public ResponseEntity<?> getProtectedData(@RequestHeader("Authorization") String token) {
-        // Validate token
-        String jwt = token.replace("Bearer ", "");
-        String email = jwtService.extractEmail(jwt);
+    // @GetMapping("/protected")
+    // public ResponseEntity<?> getProtectedData(@RequestHeader("Authorization") String token) {
+    //     // Validate token
+    //     String jwt = token.replace("Bearer ", "");
+    //     // String email = jwtService.extractEmail(jwt);
 
-        return ResponseEntity.ok(Map.of("message", "Hello " + email + ", you accessed protected data!"));
-    }
+    //     return ResponseEntity.ok(Map.of("message", "Hello " + email + ", you accessed protected data!"));
+    // }
 
 }
