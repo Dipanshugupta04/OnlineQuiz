@@ -83,11 +83,11 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(List.of(
             "http://127.0.0.1:5502",
             "http://localhost:5502",
-            "http://127.0.0.1:5500",
-            "http://localhost:5500"
+            "http://127.0.0.1:5501",
+            "http://localhost:5501"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
