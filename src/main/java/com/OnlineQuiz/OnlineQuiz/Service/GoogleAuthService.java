@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,40 +28,40 @@ public class GoogleAuthService {
     private JWTService jwtService;
 
     private static final String GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/tokeninfo?id_token=";
-
-    public String verifyAndAuthenticateUser(String idToken) {
-        System.out.println(idToken);
+    public Map<String, Object> verifyAndAuthenticateUser(String idToken) {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<Map> response = restTemplate.getForEntity(GOOGLE_TOKEN_URL + idToken, Map.class);
         Map<String, Object> userDetails = response.getBody();
-        System.out.println(userDetails.get("email"));
-
+    
         if (userDetails == null || userDetails.get("email") == null) {
             throw new RuntimeException("Invalid Google Token");
         }
-
+    
         String email = (String) userDetails.get("email");
-        System.out.println(email);
-        String name = (String) userDetails.get("name");
+    String name = (String) userDetails.get("name");~
         String pictureUrl = (String) userDetails.get("picture");
-
-        // Check if user already exists in DB
+    
+        // Save user if not exist
         Optional<User> existingUser = userRepository.findByEmail(email);
         if (existingUser.isEmpty()) {
-            // Save new user
             User newUser = new User();
             newUser.setEmail(email);
             newUser.setName(name);
             newUser.setPictureUrl(pictureUrl);
             newUser.setRole(role.User);
-            String password = (UUID.randomUUID().toString());
-            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            newUser.setPassword(passwordEncoder.encode(password));
-            newUser.setConfirmPassword(passwordEncoder.encode(password));
+            String randomPassword = UUID.randomUUID().toString();
+            PasswordEncoder encoder = new BCryptPasswordEncoder();
+            newUser.setPassword(encoder.encode(randomPassword));
+            newUser.setConfirmPassword(encoder.encode(randomPassword));
             userRepository.save(newUser);
         }
-
-        // Generate JWT Token
-        return jwtService.generateToken(email, userDetails);
+    
+        String jwt = jwtService.generateToken(email, userDetails);
+    
+        Map<String, Object> result = new HashMap<>();
+        result.put("jwt", jwt);
+        result.put("name", name);
+        return result;
     }
+    
 }

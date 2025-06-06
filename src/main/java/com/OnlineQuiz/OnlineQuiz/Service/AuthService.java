@@ -38,18 +38,30 @@ public class AuthService {
 
     public String verify(User user) {
         User user1 = new User();
-        List<String> details = new ArrayList<>();
+
+        System.out.println(user.getEmail()+ "or" + user.getPassword());
         Authentication authentication = authManager
                 .authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+                
         if (authentication.isAuthenticated()) {
             String jwt = jwtService.GenerateToken(user.getEmail());
-            details.add(jwt);
-            details.add(user1.getUNIQUE_ID());
+
             System.out.println(jwt);
             return jwt;
         } else {
             return "fail";
         }
+    }
+    public String verifyregister(User user) {
+        User user1 = new User();
+
+        System.out.println(user.getEmail()+ "or" + user.getPassword());
+        // Authentication authentication = authManager
+        //         .authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+        String jwt = jwtService.GenerateToken(user.getEmail());
+        System.out.println(jwt);
+                return jwt;
+        
     }
 
     public User registerUser(User user) {

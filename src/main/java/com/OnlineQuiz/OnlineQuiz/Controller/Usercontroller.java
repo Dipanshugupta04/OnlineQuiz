@@ -75,7 +75,14 @@ public ResponseEntity<?> login(@RequestBody User user) {
 
         try {
             User registeredUser = authService.registerUser(user);
-            return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
+           
+            User fullUser = authService.getUserByEmail(user.getEmail());
+            String token = authService.verifyregister(user);
+            Map<String, Object> response = new HashMap<>();
+            response.put("token", token);
+            response.put("user", fullUser);
+            // return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
+            return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             // Handle duplicate email
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());

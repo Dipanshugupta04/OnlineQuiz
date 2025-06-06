@@ -4,6 +4,7 @@ import com.OnlineQuiz.OnlineQuiz.Entity.User;
 import com.OnlineQuiz.OnlineQuiz.Service.GoogleAuthService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,18 +24,23 @@ public class AuthController {
     private GoogleAuthService googleAuthService;
 
     // Controller for oauth2
-    @PostMapping("/google")
-    public ResponseEntity<?> loginWithGoogle(@RequestBody Map<String, String> request) {
-        User user = new User();
-        List<String> jwtdetails = new ArrayList<>();
-        String idToken = request.get("idToken");
-        System.out.println(idToken);
-        String jwtToken = googleAuthService.verifyAndAuthenticateUser(idToken);
-        jwtdetails.add(jwtToken);
-        jwtdetails.add(user.getUNIQUE_ID());
-        System.out.println(jwtToken);
-        System.out.println("jwt token" + jwtToken);
-        System.out.println("TEST:=" + jwtdetails);
-        return ResponseEntity.ok(jwtdetails);
-    }
+   @PostMapping("/google")
+public ResponseEntity<?> loginWithGoogle(@RequestBody Map<String, String> request) {
+    String idToken = request.get("idToken");
+    System.out.println("Received ID Token: " + idToken);
+
+    // Get JWT and user details from service
+    Map<String, Object> authResponse = googleAuthService.verifyAndAuthenticateUser(idToken);
+
+    String jwt = (String) authResponse.get("jwt");
+    String fullUser = (String) authResponse.get("name");
+
+    // Return only necessary data
+    Map<String, Object> response = new HashMap<>();
+    response.put("jwt", jwt);
+    response.put("user", fullUser);
+
+    return ResponseEntity.ok(response);
+}
+
 }
