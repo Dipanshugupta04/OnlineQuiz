@@ -7,8 +7,12 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
-@Data
+
 @Table(name = "exams")
 public class Exam {
     @Id
@@ -23,12 +27,62 @@ public class Exam {
 
     @Column(nullable = false)
     private Integer durationMinutes;
-
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime startDateTime;
-
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime endDateTime;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getExamName() {
+        return examName;
+    }
+
+    public void setExamName(String examName) {
+        this.examName = examName;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Integer getDurationMinutes() {
+        return durationMinutes;
+    }
+
+    public void setDurationMinutes(Integer durationMinutes) {
+        this.durationMinutes = durationMinutes;
+    }
+
+    public LocalDateTime getStartDateTime() {
+        return startDateTime;
+    }
+
+    public void setStartDateTime(LocalDateTime startDateTime) {
+        this.startDateTime = startDateTime;
+    }
+
+    public LocalDateTime getEndDateTime() {
+        return endDateTime;
+    }
+
+    public void setEndDateTime(LocalDateTime endDateTime) {
+        this.endDateTime = endDateTime;
+    }
 
     @PrePersist
     @PreUpdate

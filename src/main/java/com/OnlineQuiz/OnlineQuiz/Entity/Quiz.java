@@ -26,8 +26,7 @@ public class Quiz {
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions = new ArrayList<>();
 
-    @OneToOne(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
-    private RoomId roomId;
+    
     private String UniqueId;
     // Getters and Setters
     public Long getId() {
@@ -78,13 +77,7 @@ public class Quiz {
         this.questions = questions;
     }
 
-    public RoomId getRoomId() {
-        return roomId;
-    }
-
-    public void setRoomId(RoomId roomId) {
-        this.roomId = roomId;
-    }
+    
 
     public String getUniqueId() {
         return UniqueId;

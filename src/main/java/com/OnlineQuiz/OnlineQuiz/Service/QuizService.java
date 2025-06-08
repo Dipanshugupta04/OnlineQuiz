@@ -118,7 +118,7 @@ public class QuizService {
         roomId.setStatus("WA");
 
         roomId = roomIdRepository.save(roomId);
-        quiz.setRoomId(roomId);
+        // quiz.setRoomId(roomId);
         quizRepository.save(quiz);
 
         return roomId;

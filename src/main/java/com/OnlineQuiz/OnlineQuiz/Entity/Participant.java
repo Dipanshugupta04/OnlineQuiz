@@ -1,5 +1,7 @@
 package com.OnlineQuiz.OnlineQuiz.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 //Entity for Paticipant
@@ -14,6 +16,7 @@ public class Participant {
 
     @ManyToOne
     @JoinColumn(name = "room_id")
+    @JsonIgnore
     private RoomId room;
 
     // Getters and Setters

@@ -21,6 +21,8 @@ public class RoomId {
     private Quiz quiz;
 
     @OneToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
     private Exam exam;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
