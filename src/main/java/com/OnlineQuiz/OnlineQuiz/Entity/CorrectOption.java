@@ -1,5 +1,7 @@
 package com.OnlineQuiz.OnlineQuiz.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 //Correct Answer Entity
@@ -11,10 +13,12 @@ public class CorrectOption {
 
     @ManyToOne // ✅ Fix: Ensure correct Many-to-One mapping
     @JoinColumn(name = "question_id", nullable = false)
+    @JsonIgnore
     private Question question;
 
     @ManyToOne
     @JoinColumn(name = "option_id", nullable = false) // ✅ Link correct option
+      @JsonIgnore
     private Option option;
 
     // Getters and Setters

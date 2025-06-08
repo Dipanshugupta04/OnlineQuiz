@@ -2,6 +2,9 @@ package com.OnlineQuiz.OnlineQuiz.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 //Entity for Question
@@ -21,6 +24,7 @@ public class Question {
 
     @ManyToOne
     @JoinColumn(name = "quiz_id") // Linked with parent
+    @JsonIgnore
     private Quiz quiz;
 
     // Getters and Setters

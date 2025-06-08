@@ -38,7 +38,7 @@ public class GoogleAuthService {
         }
     
         String email = (String) userDetails.get("email");
-    String name = (String) userDetails.get("name");~
+    String name = (String) userDetails.get("name");
         String pictureUrl = (String) userDetails.get("picture");
     
         // Save user if not exist

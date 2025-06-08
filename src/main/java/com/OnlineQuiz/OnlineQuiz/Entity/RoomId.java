@@ -2,6 +2,9 @@ package com.OnlineQuiz.OnlineQuiz.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -14,6 +17,7 @@ public class RoomId {
 
     @OneToOne
     @JoinColumn(name = "quiz_id")
+    @JsonIgnore
     private Quiz quiz;
 
     @OneToOne

@@ -1,5 +1,8 @@
 package com.OnlineQuiz.OnlineQuiz.Entity;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 //Entity for option
@@ -14,6 +17,7 @@ public class Option {
 
     @ManyToOne // ✅ Fix: Ensure correct Many-to-One mapping
     @JoinColumn(name = "question_id", nullable = false)
+   @JsonIgnore
     private Question question;
 
     // Constructors
