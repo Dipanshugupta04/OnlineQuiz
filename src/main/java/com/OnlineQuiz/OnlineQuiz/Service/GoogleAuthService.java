@@ -67,7 +67,6 @@ public class GoogleAuthService {
         result.put("jwt", jwt);
         result.put("name", name);
         result.put("unique_id",user.getUNIQUE_ID());
-        System.out.println(result);
         return result;
     }
     
