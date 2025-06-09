@@ -25,4 +25,7 @@ public class ExamDTO {
 
     @NotNull(message = "End date is required")
     private LocalDate endDate;
+
+    @NotNull(message = "examDescription")
+    private String examDescription;
 }

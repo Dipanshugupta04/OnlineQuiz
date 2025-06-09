@@ -75,7 +75,7 @@ public class AuthService {
             throw new IllegalArgumentException("Passwords do not match");
         }
         String UNIQUE_ID = "#" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
-        // user.setUNIQUE_ID(UNIQUE_ID);
+        user.setUNIQUE_ID(UNIQUE_ID);
         user.setRole(role.User);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setConfirmPassword(passwordEncoder.encode(user.getConfirmPassword()));

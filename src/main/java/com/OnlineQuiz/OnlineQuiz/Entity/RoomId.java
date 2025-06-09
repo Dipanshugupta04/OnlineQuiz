@@ -21,7 +21,7 @@ public class RoomId {
     private Quiz quiz;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "exam_id")
     @JsonIgnore
     private Exam exam;
 

@@ -22,6 +22,7 @@ public class ExamService {
         exam.setExamName(examDTO.getExamName());
         exam.setCreatedBy(examDTO.getCreatedBy());
         exam.setDurationMinutes(examDTO.getDurationMinutes());
+        exam.setExamDescription(examDTO.getExamDescription());
         
         // Convert LocalDate to LocalDateTime using start of day
         exam.setStartDateTime(LocalDateTime.of(examDTO.getStartDate(), LocalTime.MIN));

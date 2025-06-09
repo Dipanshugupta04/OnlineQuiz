@@ -55,9 +55,9 @@ public class QuizController {
     }
 
     // Controller for Generate Room id for quiz
-    @PostMapping("/generate-room/{quiz_Id}")
-    public RoomId generateRoomId(@PathVariable Long quiz_Id) {
-        return quizService.generateRoomId(quiz_Id);
+    @PostMapping("/generate-room/{exam_Id}")
+    public RoomId generateRoomId(@PathVariable Long exam_Id) {
+        return quizService.generateRoomId(exam_Id);
     }
 
     // Controller for show the quiz question using roomcode
@@ -77,6 +77,7 @@ public class QuizController {
             response.put("examId", exam.getId());
             response.put("startDateTime", exam.getStartDateTime());
             response.put("endDateTime", exam.getEndDateTime());
+            response.put("examDescription", exam.getExamDescription());
             
             return ResponseEntity.ok(response);
         } catch (Exception e) {

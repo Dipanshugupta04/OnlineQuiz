@@ -30,6 +30,9 @@ public class User implements UserDetails {
 
     private String role;
     private String UNIQUE_ID;
+    
+
+    
 
     public Long getId() {
         return id;

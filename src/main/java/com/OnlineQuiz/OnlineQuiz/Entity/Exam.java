@@ -35,6 +35,8 @@ public class Exam {
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime endDateTime;
+    @Column(nullable = false)
+    private String examDescription;
 
     public Long getId() {
         return id;
@@ -83,7 +85,18 @@ public class Exam {
     public void setEndDateTime(LocalDateTime endDateTime) {
         this.endDateTime = endDateTime;
     }
+    
 
+    public String getExamDescription() {
+        return examDescription;
+    }
+
+    public void setExamDescription(String examDescription) {
+        this.examDescription = examDescription;
+    }
+
+
+    
     @PrePersist
     @PreUpdate
     private void validateDates() {
@@ -100,4 +113,5 @@ public class Exam {
             throw new IllegalStateException("Duration must be a positive number");
         }
     }
+
 }

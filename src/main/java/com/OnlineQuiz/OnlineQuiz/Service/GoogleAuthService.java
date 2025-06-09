@@ -49,6 +49,8 @@ public class GoogleAuthService {
             newUser.setName(name);
             newUser.setPictureUrl(pictureUrl);
             newUser.setRole(role.User);
+            String UNIQUE_ID = "#" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+            newUser.setUNIQUE_ID(UNIQUE_ID);
             String randomPassword = UUID.randomUUID().toString();
             PasswordEncoder encoder = new BCryptPasswordEncoder();
             newUser.setPassword(encoder.encode(randomPassword));
@@ -57,10 +59,15 @@ public class GoogleAuthService {
         }
     
         String jwt = jwtService.generateToken(email, userDetails);
+        Optional<User> uniqueid=userRepository.findByEmail(email);
+        User user=uniqueid.get();
+        
     
         Map<String, Object> result = new HashMap<>();
         result.put("jwt", jwt);
         result.put("name", name);
+        result.put("unique_id",user.getUNIQUE_ID());
+        System.out.println(result);
         return result;
     }
     

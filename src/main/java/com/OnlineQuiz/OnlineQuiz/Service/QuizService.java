@@ -16,6 +16,7 @@ import com.OnlineQuiz.OnlineQuiz.DTO.QuizRequestDTO;
 import com.OnlineQuiz.OnlineQuiz.DTO.QuizSubmissionDTO;
 import com.OnlineQuiz.OnlineQuiz.DTO.ResultDTO;
 import com.OnlineQuiz.OnlineQuiz.Entity.CorrectOption;
+import com.OnlineQuiz.OnlineQuiz.Entity.Exam;
 import com.OnlineQuiz.OnlineQuiz.Entity.Option;
 import com.OnlineQuiz.OnlineQuiz.Entity.Question;
 import com.OnlineQuiz.OnlineQuiz.Entity.Quiz;
@@ -24,6 +25,7 @@ import com.OnlineQuiz.OnlineQuiz.Reposistory.quizRepository;
 import com.OnlineQuiz.OnlineQuiz.Reposistory.roomIdRepository;
 import com.OnlineQuiz.OnlineQuiz.Reposistory.questionRepository;
 import com.OnlineQuiz.OnlineQuiz.Reposistory.optionRepository;
+import com.OnlineQuiz.OnlineQuiz.Reposistory.ExamRepository;
 import com.OnlineQuiz.OnlineQuiz.Reposistory.correctOptionRepository;
 
 @Service
@@ -34,6 +36,8 @@ public class QuizService {
 
     @Autowired
     private roomIdRepository roomIdRepository;
+    @Autowired
+    private ExamRepository  examRepository;
 
     @Autowired
     private questionRepository questionRepository;
@@ -103,8 +107,8 @@ public class QuizService {
     
         return quiz;
     }
-    public RoomId generateRoomId(Long quiz_Id) {
-        Quiz quiz = quizRepository.findById(quiz_Id)
+    public RoomId generateRoomId(Long exam_Id) {
+        Exam exam= examRepository.findById(exam_Id)
                 .orElseThrow(() -> new RuntimeException("Quiz not found"));
 
         String roomCode;
@@ -114,12 +118,12 @@ public class QuizService {
 
         RoomId roomId = new RoomId();
         roomId.setRoomCode(roomCode);
-        roomId.setQuiz(quiz);
+        roomId.setExam(exam);
         roomId.setStatus("WA");
 
         roomId = roomIdRepository.save(roomId);
         // quiz.setRoomId(roomId);
-        quizRepository.save(quiz);
+        examRepository.save(exam);
 
         return roomId;
     }
