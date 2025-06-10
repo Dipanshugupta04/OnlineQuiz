@@ -30,6 +30,8 @@ public class ExamService {
         exam.setCreatedBy(examDTO.getCreatedBy());
         exam.setDurationMinutes(examDTO.getDurationMinutes());
         exam.setExamDescription(examDTO.getExamDescription());
+        
+        
     
         User user = userRepository.findByUniqueId(examDTO.getUniqueId())
             .orElseThrow(() -> new RuntimeException("User not found with given unique ID"));

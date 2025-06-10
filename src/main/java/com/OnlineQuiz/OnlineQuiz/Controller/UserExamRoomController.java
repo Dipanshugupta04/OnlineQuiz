@@ -96,6 +96,7 @@ public class UserExamRoomController {
             if (exam != null && exam.getId() != null) {
                 // Step 3: Delete Exam first
                 examRepository.deleteById(exam.getId());
+                
                 System.out.println(exam);
             }
     

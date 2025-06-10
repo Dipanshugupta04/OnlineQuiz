@@ -7,6 +7,7 @@ public class QuizRequestDTO {
     private String title;
     private String userName;
     private List<QuestionDTO> questions;
+    private String roomid;
 
     public String getTitle() {
         return title;
@@ -31,4 +32,13 @@ public class QuizRequestDTO {
     public void setQuestions(List<QuestionDTO> questions) {
         this.questions = questions;
     }
+
+    public String getRoomid() {
+        return roomid;
+    }
+
+    public void setRoomid(String roomid) {
+        this.roomid = roomid;
+    }
+    
 }

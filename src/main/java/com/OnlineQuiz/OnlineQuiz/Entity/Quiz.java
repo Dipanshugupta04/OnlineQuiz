@@ -3,8 +3,14 @@ package com.OnlineQuiz.OnlineQuiz.Entity;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.print.DocFlavor.STRING;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -25,9 +31,11 @@ public class Quiz {
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions = new ArrayList<>();
+ 
+    private String roomid;
 
-    
-    private String UniqueId;
+ 
+
     // Getters and Setters
     public Long getId() {
         return id;
@@ -77,14 +85,19 @@ public class Quiz {
         this.questions = questions;
     }
 
+    public String getRoomid() {
+        return roomid;
+    }
+
+    public void setRoomid(String roomid) {
+        this.roomid = roomid;
+    }
+
     
 
-    public String getUniqueId() {
-        return UniqueId;
-    }
+    
 
-    public void setUniqueId(String uniqueId) {
-        UniqueId = uniqueId;
-    }
    
+    
+    
 }

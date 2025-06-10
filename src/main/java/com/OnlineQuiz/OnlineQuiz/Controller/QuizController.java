@@ -79,6 +79,7 @@ public class QuizController {
             response.put("startDateTime", exam.getStartDateTime());
             response.put("endDateTime", exam.getEndDateTime());
             response.put("examDescription", exam.getExamDescription());
+            // response.put("roomid", exam.get)
             
             return ResponseEntity.ok(response);
         } catch (Exception e) {

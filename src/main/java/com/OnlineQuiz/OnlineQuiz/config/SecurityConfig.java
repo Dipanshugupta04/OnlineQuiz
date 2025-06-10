@@ -64,7 +64,8 @@ public class SecurityConfig {
                                 "/quiz/exam/create",
                                 "/quiz/leave/**",
                                 "/api/home",
-                                "/api/exam/**")
+                                "/api/exam/**",
+                                "/api/quizzes/** ")
                         .authenticated()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
