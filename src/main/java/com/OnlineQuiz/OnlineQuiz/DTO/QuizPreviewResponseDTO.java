@@ -8,11 +8,13 @@ public class QuizPreviewResponseDTO {
     private Long quizId;
     private String title;
     private String userName;
+    private String roomid;
     private LocalDateTime createdAt;
     private int questionCount;
     private List<QuestionDTO> questions;
 
     // Getters and Setters
+    
     public Long getQuizId() {
         return quizId;
     }
@@ -59,5 +61,13 @@ public class QuizPreviewResponseDTO {
 
     public void setQuestions(List<QuestionDTO> questions) {
         this.questions = questions;
+    }
+
+    public String getRoomid() {
+        return roomid;
+    }
+
+    public void setRoomid(String roomid) {
+        this.roomid = roomid;
     }
 }
