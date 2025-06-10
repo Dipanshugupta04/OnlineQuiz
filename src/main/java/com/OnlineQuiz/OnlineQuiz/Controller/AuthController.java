@@ -34,11 +34,14 @@ public ResponseEntity<?> loginWithGoogle(@RequestBody Map<String, String> reques
 
     String jwt = (String) authResponse.get("jwt");
     String fullUser = (String) authResponse.get("name");
+    String unique_id = (String) authResponse.get("unique_id");
+    
 
     // Return only necessary data
     Map<String, Object> response = new HashMap<>();
     response.put("jwt", jwt);
     response.put("user", fullUser);
+    response.put("unique_id", unique_id);
 
     return ResponseEntity.ok(response);
 }

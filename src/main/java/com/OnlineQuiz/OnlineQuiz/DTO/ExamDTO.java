@@ -28,4 +28,6 @@ public class ExamDTO {
 
     @NotNull(message = "examDescription")
     private String examDescription;
+    @NotNull(message = "userid Required")
+    private String uniqueId;
 }

@@ -29,7 +29,9 @@ public class User implements UserDetails {
     private String pictureUrl;
 
     private String role;
-    private String UNIQUE_ID;
+   
+    @Column(name = "unique_id", nullable = false)
+    private String uniqueId; 
     
 
     
@@ -120,11 +122,12 @@ public class User implements UserDetails {
         return true;
     }
 
-    public String getUNIQUE_ID() {
-        return UNIQUE_ID;
+    public String getUniqueId() {
+        return uniqueId;
     }
 
-    public void setUNIQUE_ID(String uNIQUE_ID) {
-        UNIQUE_ID = uNIQUE_ID;
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
     }
+
 }

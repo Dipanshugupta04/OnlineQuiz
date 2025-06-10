@@ -37,42 +37,45 @@ public class SecurityConfig {
         return (request, response, authException) -> {
             response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().println("{ \"status\": \"error\", \"message\": \"Unauthorized: " + authException.getMessage() + "\" }");
+            response.getWriter().println(
+                    "{ \"status\": \"error\", \"message\": \"Unauthorized: " + authException.getMessage() + "\" }");
         };
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .authorizeHttpRequests(requests -> requests
-                .requestMatchers(
-                    "/auth/google",
-                    "/login/oauth2/code/**",
-                    "/api/auth/**",
-                    "/api/register",
-                    "/api/login",
-                    "/api/home",
-                    "/quiz/join-room",
-                    "/quiz/questions/**"
-                ).permitAll()
-                .requestMatchers(
-                    "/quiz/create",
-                    "/quiz/exam/create",
-                    "/quiz/leave/**"
-                ).authenticated()
-                .anyRequest().authenticated()
-            )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authenticationProvider(authenticationProvider())
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-            .logout(logout -> logout
-                .logoutUrl("/api/logout")
-                .logoutSuccessHandler((request, response, authentication) -> response.setStatus(HttpServletResponse.SC_OK))
-                .permitAll()
-            )
-            .exceptionHandling(exceptions -> exceptions.authenticationEntryPoint(jwtAuthenticationEntryPoint()));
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(requests -> requests
+                        .requestMatchers(
+                                "/auth/google",
+                                "/login/oauth2/code/**",
+                                "/api/auth/**",
+                                "/api/register",
+                                "/api/login",
+                               
+                                "/quiz/join-room",
+                                "/quiz/questions/**"
+
+                        ).permitAll()
+                        .requestMatchers(
+                                "/quiz/create",
+                                "/quiz/exam/create",
+                                "/quiz/leave/**",
+                                "/api/home",
+                                "/api/exam/**")
+                        .authenticated()
+                        .anyRequest().authenticated())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout(logout -> logout
+                        .logoutUrl("/api/logout")
+                        .logoutSuccessHandler(
+                                (request, response, authentication) -> response.setStatus(HttpServletResponse.SC_OK))
+                        .permitAll())
+                .exceptionHandling(exceptions -> exceptions.authenticationEntryPoint(jwtAuthenticationEntryPoint()));
 
         return http.build();
     }
@@ -81,11 +84,10 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
-            "http://127.0.0.1:5502",
-            "http://localhost:5502",
-            "http://127.0.0.1:5501",
-            "http://localhost:5501"
-        ));
+                "http://127.0.0.1:5502",
+                "http://localhost:5502",
+                "http://127.0.0.1:5501",
+                "http://localhost:5501"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);

@@ -49,8 +49,8 @@ public class GoogleAuthService {
             newUser.setName(name);
             newUser.setPictureUrl(pictureUrl);
             newUser.setRole(role.User);
-            String UNIQUE_ID = "#" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
-            newUser.setUNIQUE_ID(UNIQUE_ID);
+            String UNIQUE_ID =UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+            newUser.setUniqueId(UNIQUE_ID);
             String randomPassword = UUID.randomUUID().toString();
             PasswordEncoder encoder = new BCryptPasswordEncoder();
             newUser.setPassword(encoder.encode(randomPassword));
@@ -66,7 +66,7 @@ public class GoogleAuthService {
         Map<String, Object> result = new HashMap<>();
         result.put("jwt", jwt);
         result.put("name", name);
-        result.put("unique_id",user.getUNIQUE_ID());
+        result.put("unique_id",user.getUniqueId());
         return result;
     }
     

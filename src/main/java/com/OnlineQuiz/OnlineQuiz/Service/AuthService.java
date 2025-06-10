@@ -60,6 +60,7 @@ public class AuthService {
         //         .authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
         String jwt = jwtService.GenerateToken(user.getEmail());
         System.out.println(jwt);
+        
                 return jwt;
         
     }
@@ -74,8 +75,8 @@ public class AuthService {
         if (!user.getPassword().equals(user.getConfirmPassword())) {
             throw new IllegalArgumentException("Passwords do not match");
         }
-        String UNIQUE_ID = "#" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
-        user.setUNIQUE_ID(UNIQUE_ID);
+        String UNIQUE_ID =  UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+        user.setUniqueId(UNIQUE_ID);
         user.setRole(role.User);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setConfirmPassword(passwordEncoder.encode(user.getConfirmPassword()));

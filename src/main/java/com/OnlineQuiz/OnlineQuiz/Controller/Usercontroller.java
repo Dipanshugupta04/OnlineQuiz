@@ -4,6 +4,8 @@ package com.OnlineQuiz.OnlineQuiz.Controller;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.Authentication;
 
 import com.OnlineQuiz.OnlineQuiz.Entity.User;
+import com.OnlineQuiz.OnlineQuiz.Reposistory.UserRepository;
 import com.OnlineQuiz.OnlineQuiz.Service.AuthService;
 import com.OnlineQuiz.OnlineQuiz.Service.JWTService;
 
@@ -31,6 +34,8 @@ public class Usercontroller {
 
     @Autowired
     private AuthService authService;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private JWTService jwtService;
@@ -56,10 +61,16 @@ public ResponseEntity<?> login(@RequestBody User user) {
     }
 
     User fullUser = authService.getUserByEmail(user.getEmail());
+    Optional<User> unique_id=userRepository.findByEmail(user.getEmail());
+    if(unique_id.isPresent()) {
+        System.out.println(unique_id.get().getUniqueId());
+    }
 
     Map<String, Object> response = new HashMap<>();
     response.put("token", token);
-    response.put("user", fullUser);
+    response.put("user", fullUser.getName());
+    response.put("unique_id",unique_id.get().getUniqueId());
+
 
     return ResponseEntity.ok(response);
 }

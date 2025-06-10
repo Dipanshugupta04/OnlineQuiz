@@ -69,6 +69,7 @@ public class QuizController {
     // Controller for create exam details
      @PostMapping("/exam/create")
     public ResponseEntity<?> createExam(@RequestBody ExamDTO examDTO) {
+        System.out.println(examDTO);
         try {
             Exam exam = examService.createExam(examDTO);
             

@@ -12,4 +12,6 @@ public interface roomIdRepository extends JpaRepository<RoomId, Long> {
 
     Optional<RoomId> findByRoomCode(String roomCode);
 
+    Optional<RoomId> findByExamId(Long id);
+
 }
