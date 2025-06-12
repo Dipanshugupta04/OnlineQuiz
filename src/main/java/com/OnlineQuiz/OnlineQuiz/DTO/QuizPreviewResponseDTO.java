@@ -1,6 +1,7 @@
 package com.OnlineQuiz.OnlineQuiz.DTO;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -9,7 +10,7 @@ public class QuizPreviewResponseDTO {
     private String title;
     private String userName;
     private String roomid;
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
     private int questionCount;
     private List<QuestionDTO> questions;
 
@@ -39,13 +40,7 @@ public class QuizPreviewResponseDTO {
         this.userName = userName;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
+   
 
     public int getQuestionCount() {
         return questionCount;
@@ -69,5 +64,13 @@ public class QuizPreviewResponseDTO {
 
     public void setRoomid(String roomid) {
         this.roomid = roomid;
+    }
+
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
     }
 }

@@ -4,8 +4,10 @@ import java.util.List;
 
 //Quiz Request Data Transfer Object
 public class QuizRequestDTO {
+    
     private String title;
     private String userName;
+
     private List<QuestionDTO> questions;
     private String roomid;
 

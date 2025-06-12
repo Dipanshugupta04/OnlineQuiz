@@ -2,8 +2,10 @@ package com.OnlineQuiz.OnlineQuiz.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -154,4 +156,67 @@ public class QuizService {
         Quiz quiz = room.getQuiz();
         return quiz.getQuestions();
     }
+
+
+
+    //Update question
+
+    public void updateQuizByRoomCode(String roomCode, QuizRequestDTO quizDTO) {
+        // Find the quiz by room code
+        Quiz quiz = quizRepository.findByroomid(roomCode);
+        if (quiz == null) {
+            throw new RuntimeException("Quiz not found for room code: " + roomCode);
+        }
+    
+        // Clear old questions
+        quiz.getQuestions().clear();
+    
+        List<Question> updatedQuestions = new ArrayList<>();
+    
+        for (QuestionDTO questionDTO : quizDTO.getQuestions()) {
+            Question question;
+    
+            // Update existing question or create new one
+            if (questionDTO.getId() != null) {
+                question = questionRepository.findById(questionDTO.getId().longValue())
+                        .orElse(new Question());
+            } else {
+                question = new Question();
+            }
+    
+            question.setQuestionText(questionDTO.getQuestionText());
+            question.setQuiz(quiz);
+    
+            // Create and link options
+            List<Option> optionList = new ArrayList<>();
+            List<CorrectOption> correctOptions = new ArrayList<>();
+    
+            for (AnswerDTO answerDTO : questionDTO.getAnswers()) {
+                Option option = new Option();
+                option.setOptionText(answerDTO.getAnswerText());
+                option.setQuestion(question);  // Set bi-directional link
+                optionList.add(option);
+    
+                // Create CorrectOption if this answer is correct
+                if (answerDTO.isCorrectAnswer()) {
+                    CorrectOption correctOption = new CorrectOption();
+                    correctOption.setOption(option);
+                    correctOption.setQuestion(question);
+                    correctOptions.add(correctOption);
+                }
+            }
+    
+            question.setOptions(optionList);
+            question.setCorrectOptions(correctOptions);
+            updatedQuestions.add(question);
+        }
+    
+        // Add all updated questions to quiz
+        quiz.getQuestions().addAll(updatedQuestions);
+    
+        // Save the updated quiz (will cascade and save questions, options, correct options)
+        quizRepository.save(quiz);
+    }
+    
+
 }

@@ -5,6 +5,8 @@ import java.util.List;
 
 //Question Data Transfer Object
 public class QuestionDTO {
+    private Integer id;
+
     private String questionText;
     private List<AnswerDTO> answers; // Fix: Renamed from `optionText` to `answers`
 
@@ -28,4 +30,15 @@ public class QuestionDTO {
     public void setAnswers(List<AnswerDTO> answers) {
         this.answers = answers;
     }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    
+    
 }

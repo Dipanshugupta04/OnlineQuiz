@@ -7,8 +7,10 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.OnlineQuiz.OnlineQuiz.DTO.ExamDTO;
 import com.OnlineQuiz.OnlineQuiz.DTO.QuizRequestDTO;
@@ -54,6 +56,17 @@ public class QuizController {
         return quizService.createQuiz(quizDTO);
     }
 
+    @PutMapping("/update-by-question/{roomCode}")
+    public ResponseEntity<?> updateQuizByRoomCode(@PathVariable String roomCode, @RequestBody QuizRequestDTO quizDTO) {
+        try {
+            quizService.updateQuizByRoomCode(roomCode, quizDTO);
+            return ResponseEntity.ok("Quiz updated successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+        }
+    }
+    
+
     // Controller for Generate Room id for quiz
     @PostMapping("/generate-room/{exam_Id}")
     public RoomId generateRoomId(@PathVariable Long exam_Id) {
@@ -87,6 +100,37 @@ public class QuizController {
             errorResponse.put("status", "error");
             errorResponse.put("message", e.getMessage());
             return ResponseEntity.badRequest().body(errorResponse);
+        }
+    }
+    //Update exma Data
+    @PutMapping("/update-by-room/{roomCode}") // Using PUT for updates
+    public ResponseEntity<?> updateExamByRoomCode(@PathVariable String roomCode, @RequestBody ExamDTO examDTO) {
+        if (roomCode == null || roomCode.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("status", "error", "message", "Room code cannot be empty."));
+        }
+        if (examDTO == null) {
+            return ResponseEntity.badRequest().body(Map.of("status", "error", "message", "Exam data cannot be empty."));
+        }
+
+        try {
+            Exam updatedExam = examService.updateExam(roomCode, examDTO);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", "success");
+            response.put("message", "Exam updated successfully.");
+            response.put("examId", updatedExam.getId());
+            response.put("examDescription", updatedExam.getExamDescription());
+            response.put("startDateTime", updatedExam.getStartDateTime());
+            response.put("endDateTime", updatedExam.getEndDateTime());
+
+            return ResponseEntity.ok(response);
+        } catch (ResponseStatusException e) {
+            // Catches exceptions thrown by the service (e.g., NOT_FOUND)
+            return ResponseEntity.status(e.getStatusCode()).body(Map.of("status", "error", "message", e.getReason()));
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the full stack trace for debugging
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body(Map.of("status", "error", "message", "An unexpected error occurred: " + e.getMessage()));
         }
     }
 
@@ -128,20 +172,20 @@ public class QuizController {
         }
 
         // Check exam timing
-        Exam exam = room.getExam();
-        if (exam != null) {
-            LocalDateTime now = LocalDateTime.now();
-            if (now.isBefore(exam.getStartDateTime())) {
-                return ResponseEntity.status(403).body(Map.of(
-                        "status", "not_started",
-                        "message", "Exam has not started yet."));
-            }
-            if (now.isAfter(exam.getEndDateTime())) {
-                return ResponseEntity.status(403).body(Map.of(
-                        "status", "expired",
-                        "message", "Exam has already ended."));
-            }
-        }
+        // Exam exam = room.getExam();
+        // if (exam != null) {
+        //     LocalDateTime now = LocalDateTime.now();
+        //     if (now.isBefore(exam.getStartDateTime())) {
+        //         return ResponseEntity.status(403).body(Map.of(
+        //                 "status", "not_started",
+        //                 "message", "Exam has not started yet."));
+        //     }
+        //     if (now.isAfter(exam.getEndDateTime())) {
+        //         return ResponseEntity.status(403).body(Map.of(
+        //                 "status", "expired",
+        //                 "message", "Exam has already ended."));
+        //     }
+        // }
 
         // Optional: prevent duplicate joining
         boolean alreadyJoined = room.getParticipants().stream()

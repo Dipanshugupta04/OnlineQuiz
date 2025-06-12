@@ -1,5 +1,6 @@
 package com.OnlineQuiz.OnlineQuiz.Entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -35,14 +36,14 @@ public class Exam {
     private Integer durationMinutes;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    @CreationTimestamp
+
     @Column(nullable = false)
-    private LocalDateTime startDateTime;
+    private LocalDate startDateTime;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    @CreationTimestamp
+
     @Column(nullable = false)
-    private LocalDateTime endDateTime;
+    private LocalDate endDateTime;
 
     @Column(nullable = false)
     private String examDescription;
@@ -103,19 +104,20 @@ public class Exam {
         this.durationMinutes = durationMinutes;
     }
 
-    public LocalDateTime getStartDateTime() {
+    
+    public LocalDate getStartDateTime() {
         return startDateTime;
     }
 
-    public void setStartDateTime(LocalDateTime startDateTime) {
+    public void setStartDateTime(LocalDate startDateTime) {
         this.startDateTime = startDateTime;
     }
 
-    public LocalDateTime getEndDateTime() {
+    public LocalDate getEndDateTime() {
         return endDateTime;
     }
 
-    public void setEndDateTime(LocalDateTime endDateTime) {
+    public void setEndDateTime(LocalDate endDateTime) {
         this.endDateTime = endDateTime;
     }
 
