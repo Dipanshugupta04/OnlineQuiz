@@ -76,7 +76,7 @@ public class QuizController {
     // Controller for show the quiz question using roomcode
     @GetMapping("/questions/{roomCode}")
     public List<Question> getQuestionsByRoomCode(@PathVariable String roomCode) {
-        return quizService.getQuestionsByRoomCode(roomCode);
+        return (List<Question>) quizService.getQuestionsByRoomCode(roomCode);
     }
 
     // Controller for create exam details
@@ -151,43 +151,25 @@ public class QuizController {
             return ResponseEntity.status(404)
                     .body(Map.of("status", "error", "message", "User not found"));
         }
-        // check status of the room is activated or not
-        // if(roomid.status().equals("Active")){}
 
         RoomId room = roomOpt.get();
         User user = userOpt.get();
 
         // Check room status
-        String status = room.getStatus();
-        if ("EXPIRED".equalsIgnoreCase(status)) {
-            return ResponseEntity.status(403).body(Map.of(
-                    "status", "expired",
-                    "message", "This quiz has expired and can no longer be joined.",
-                    "roomCode", room.getRoomCode()));
-        } else if (!"ACTIVE".equalsIgnoreCase(status)) {
-            return ResponseEntity.ok(Map.of(
-                    "status", "waiting",
-                    "message", "Quiz not yet delivered. Please wait.",
-                    "roomCode", room.getRoomCode()));
-        }
-
-        // Check exam timing
-        // Exam exam = room.getExam();
-        // if (exam != null) {
-        //     LocalDateTime now = LocalDateTime.now();
-        //     if (now.isBefore(exam.getStartDateTime())) {
-        //         return ResponseEntity.status(403).body(Map.of(
-        //                 "status", "not_started",
-        //                 "message", "Exam has not started yet."));
-        //     }
-        //     if (now.isAfter(exam.getEndDateTime())) {
-        //         return ResponseEntity.status(403).body(Map.of(
-        //                 "status", "expired",
-        //                 "message", "Exam has already ended."));
-        //     }
+        // String status = room.getStatus();
+        // if ("EXPIRED".equalsIgnoreCase(status)) {
+        //     return ResponseEntity.status(403).body(Map.of(
+        //             "status", "expired",
+        //             "message", "This quiz has expired and can no longer be joined.",
+        //             "roomCode", room.getRoomCode()));
+        // } else if (!"ACTIVE".equalsIgnoreCase(status)) {
+        //     return ResponseEntity.ok(Map.of(
+        //             "status", "waiting",
+        //             "message", "Quiz not yet delivered. Please wait.",
+        //             "roomCode", room.getRoomCode()));
         // }
 
-        // Optional: prevent duplicate joining
+        // Check if already joined
         boolean alreadyJoined = room.getParticipants().stream()
                 .anyMatch(p -> p.getParticipantName().equals(user.getName()));
         if (alreadyJoined) {
@@ -195,26 +177,31 @@ public class QuizController {
                     .ok(Map.of("status", "info", "message", "Already joined", "roomCode", room.getRoomCode()));
         }
 
-        Participant participant = new Participant();
-        participant.setParticipantName(user.getName());
-        participant.setParticipantEmail(user.getEmail());
-        participant.setRoom(room);
+        // // Add participant
+        // Participant participant = new Participant();
+        // participant.setParticipantName(user.getName());
+        // participant.setParticipantEmail(user.getEmail());
+        // participant.setRoom(room);
+        // participantRepo.save(participant);
 
-        participantRepo.save(participant);
+        // Get quiz questions
+        Map<String, Object> quizData = (Map<String, Object>) quizService.getQuestionsByRoomCode(roomCode);
+        
+        // Notify all clients in the room about new participant
+        // messagingTemplate.convertAndSend("/topic/room/" + roomCode + "/participants", Map.of(
+        //     "action", "participant_joined",
+        //     "participantName", user.getName(),
+        //     "totalParticipants", room.getParticipants().size()
+        // ));
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", "success");
-        response.put("message", "Joined quiz successfully");
-        response.put("roomCode", room.getRoomCode());
-        response.put("participantName", user.getName());
-
-        response.put("quiz", quizService.getQuestionsByRoomCode(roomCode));
-        // System.out.println(response);
-
-        return ResponseEntity.ok(response);
-
+        return ResponseEntity.ok(Map.of(
+            "status", "success",
+            "message", "Joined quiz successfully",
+            "roomCode", room.getRoomCode(),
+            "participantName", user.getName(),
+            "quiz", quizData
+        ));
     }
-
     // Controller for leave the quiz
     @PutMapping("/leave/{email}")
     public ResponseEntity<String> leaveRoom(@PathVariable String email) {

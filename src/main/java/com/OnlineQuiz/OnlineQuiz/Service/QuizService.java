@@ -149,12 +149,34 @@ public class QuizService {
         return new ResultDTO(total, correct, percentage);
     }
 
-    public List<Question> getQuestionsByRoomCode(String roomCode) {
-        RoomId room = roomIdRepository.findByRoomCode(roomCode)
-                .orElseThrow(() -> new RuntimeException("Room not found with code: " + roomCode));
+   public Map<String, Object> getQuestionsByRoomCode(String roomCode) {
+    Optional<RoomId> roomOpt = roomIdRepository.findByRoomCode(roomCode);
+    
+    if (roomOpt.isEmpty()) {
+        throw new IllegalArgumentException("Room not found with code: " + roomCode);
+    }
+    
+   String room = roomOpt.get().getRoomCode();
 
-        Quiz quiz = room.getQuiz();
-        return quiz.getQuestions();
+    Quiz quiz = quizRepository.findByroomid(room);
+    System.out.println("quiz id ="+quiz.getId());
+    
+    if (quiz == null) {
+        throw new IllegalStateException("No quiz associated with room: " + roomCode);
+    }
+    Optional<Question> question=questionRepository.findById(quiz.getId());
+    System.out.println("question is =="+question.get());
+    
+    List<Question> questions=quiz.getQuestions();
+    // System.out.println(questions.toString());
+    if (questions == null || questions.isEmpty()) {
+        throw new IllegalStateException("No questions found for quiz in room: " + roomCode);
+    }
+    
+    // Your existing processing logic here
+    // ...
+
+        return (Map<String, Object>) quiz.getQuestions();
     }
 
 

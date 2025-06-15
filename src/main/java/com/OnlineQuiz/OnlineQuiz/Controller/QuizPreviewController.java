@@ -19,6 +19,7 @@ public class QuizPreviewController {
         if (response != null) {
             return ResponseEntity.ok(response);
         }
+        System.out.println(response);
         return ResponseEntity.notFound().build();
     }
 

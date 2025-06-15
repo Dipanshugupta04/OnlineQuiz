@@ -15,14 +15,17 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic"); // Simple broker for broadcast messages
-        config.setApplicationDestinationPrefixes("/app"); // Prefix for client-to-server messages
+        config.enableSimpleBroker("/topic");
+        config.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/quiz-websocket").withSockJS(); // Stomp endpoint for WebSocket connection
+        registry.addEndpoint("/quiz-websocket")
+                .setAllowedOriginPatterns("*")
+                .withSockJS();
     }
+
     @Bean
 public WebMvcConfigurer corsConfigurer() {
     return new WebMvcConfigurer() {
