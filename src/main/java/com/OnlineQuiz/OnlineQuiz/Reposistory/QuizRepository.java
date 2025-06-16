@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.OnlineQuiz.OnlineQuiz.Entity.Exam;
 import com.OnlineQuiz.OnlineQuiz.Entity.Quiz;
+import com.OnlineQuiz.OnlineQuiz.Entity.RoomId;
 
 @Repository
 public interface quizRepository extends JpaRepository<Quiz, Long> {
@@ -15,7 +16,7 @@ public interface quizRepository extends JpaRepository<Quiz, Long> {
     @EntityGraph(attributePaths = {"questions", "questions.options", "questions.correctOptions", "questions.correctOptions.option"})
     @Query("SELECT q FROM Quiz q WHERE q.id = :quizId")
     Quiz findByIdWithQuestionsAndOptions(Long quizId);
-    Quiz findByroomid(String roomid);
+    Quiz findByroomid(String roomCode);
   
 
 }

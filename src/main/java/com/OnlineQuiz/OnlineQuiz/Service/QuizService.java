@@ -1,6 +1,7 @@
 package com.OnlineQuiz.OnlineQuiz.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,6 +29,7 @@ import com.OnlineQuiz.OnlineQuiz.Reposistory.roomIdRepository;
 import com.OnlineQuiz.OnlineQuiz.Reposistory.questionRepository;
 import com.OnlineQuiz.OnlineQuiz.Reposistory.optionRepository;
 import com.OnlineQuiz.OnlineQuiz.Reposistory.ExamRepository;
+import com.OnlineQuiz.OnlineQuiz.Reposistory.ParticipantRepo;
 import com.OnlineQuiz.OnlineQuiz.Reposistory.correctOptionRepository;
 
 @Service
@@ -49,6 +51,8 @@ public class QuizService {
 
     @Autowired
     private correctOptionRepository correctOptionRepository;
+    @Autowired
+    private ParticipantRepo participantRepo;
 
     @Transactional
     public Quiz createQuiz(QuizRequestDTO quizDTO) {
@@ -149,37 +153,50 @@ public class QuizService {
         return new ResultDTO(total, correct, percentage);
     }
 
-   public Map<String, Object> getQuestionsByRoomCode(String roomCode) {
-    Optional<RoomId> roomOpt = roomIdRepository.findByRoomCode(roomCode);
+    public Map<String, Object> getQuestionsByRoomCode(String roomCode) {
+        // First find the RoomId by its code
+        RoomId room = roomIdRepository.findByRoomCode(roomCode)
+            .orElseThrow(() -> new IllegalArgumentException("Room not found with code: " + roomCode));
+        
+        // Get the quiz for this room
+        Quiz quiz = quizRepository.findByroomid(roomCode);
+            
+        // Get questions for the quiz
+        List<Question> questionList = questionRepository.findByquiz_id(quiz.getId());
+        
+        // Transform questions to the required format
+        List<Map<String, Object>> questions = questionList.stream()
+            .map(question -> {
+                Map<String, Object> questionMap = new HashMap<>();
+                questionMap.put("id", question.getId());
+                questionMap.put("text", question.getQuestionText());
+                
+                List<Map<String, String>> options = question.getOptions().stream()
+                    .map(option -> {
+                        Map<String, String> optionMap = new HashMap<>();
+                        optionMap.put("id", option.getId().toString());
+                        optionMap.put("text", option.getOptionText());
+                        return optionMap;
+                    })
+                    .collect(Collectors.toList());
+                    
+                questionMap.put("options", options);
+                return questionMap;
+            })
+            .collect(Collectors.toList());
     
-    if (roomOpt.isEmpty()) {
-        throw new IllegalArgumentException("Room not found with code: " + roomCode);
+        // Get participants for this room
+        List<Map<String, Object>> participants = participantRepo.findByroom_id(roomCode);
+        int participantCount = participants.size();
+        System.out.println(participantCount);
+        // Build the final response
+        Map<String, Object> quizData = new HashMap<>();
+        quizData.put("title", quiz.getTitle());
+        quizData.put("questions", questions);
+        quizData.put("participants", participantCount);
+        
+        return quizData;
     }
-    
-   String room = roomOpt.get().getRoomCode();
-
-    Quiz quiz = quizRepository.findByroomid(room);
-    System.out.println("quiz id ="+quiz.getId());
-    
-    if (quiz == null) {
-        throw new IllegalStateException("No quiz associated with room: " + roomCode);
-    }
-    Optional<Question> question=questionRepository.findById(quiz.getId());
-    System.out.println("question is =="+question.get());
-    
-    List<Question> questions=quiz.getQuestions();
-    // System.out.println(questions.toString());
-    if (questions == null || questions.isEmpty()) {
-        throw new IllegalStateException("No questions found for quiz in room: " + roomCode);
-    }
-    
-    // Your existing processing logic here
-    // ...
-
-        return (Map<String, Object>) quiz.getQuestions();
-    }
-
-
 
     //Update question
 
@@ -242,3 +259,4 @@ public class QuizService {
     
 
 }
+

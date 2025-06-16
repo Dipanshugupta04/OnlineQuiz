@@ -61,12 +61,14 @@ public ResponseEntity<?> login(@RequestBody User user) {
     }
 
     User fullUser = authService.getUserByEmail(user.getEmail());
+    System.out.println(user.getEmail());
     Optional<User> unique_id=userRepository.findByEmail(user.getEmail());
     if(unique_id.isPresent()) {
         System.out.println(unique_id.get().getUniqueId());
     }
 
     Map<String, Object> response = new HashMap<>();
+    response.put("email", user.getEmail());
     response.put("token", token);
     response.put("user", fullUser.getName());
     response.put("unique_id",unique_id.get().getUniqueId());

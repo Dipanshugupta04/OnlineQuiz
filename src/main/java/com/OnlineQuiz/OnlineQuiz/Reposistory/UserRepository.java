@@ -1,5 +1,6 @@
 package com.OnlineQuiz.OnlineQuiz.Reposistory;
 
+import com.OnlineQuiz.OnlineQuiz.Entity.RoomId;
 import com.OnlineQuiz.OnlineQuiz.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -11,6 +12,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email); // correct method name
 
     Optional<User> findByUniqueId(String uniqueId);
+
+    User findByemail(String email);
 
     
 

@@ -24,14 +24,7 @@ public class Participant {
         return id;
     }
 
-    public String getParticipantEmail() {
-        return email;
-    }
-
-    public void setParticipantEmail(String email) {
-        this.email = email;
-    }
-
+   
     public void setId(Long id) {
         this.id = id;
     }
@@ -50,5 +43,15 @@ public class Participant {
 
     public void setRoom(RoomId room) {
         this.room = room;
+    }
+
+
+    public String getEmail() {
+        return email;
+    }
+
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

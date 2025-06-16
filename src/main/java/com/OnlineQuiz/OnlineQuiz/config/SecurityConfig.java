@@ -49,12 +49,13 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers(
+                                "/ws/**",
                                 "/auth/google",
                                 "/login/oauth2/code/**",
                                 "/api/auth/**",
                                 "/api/register",
                                 "/api/login",
-                               
+
                                 "/quiz/join-room",
                                 "/quiz/questions/**"
 

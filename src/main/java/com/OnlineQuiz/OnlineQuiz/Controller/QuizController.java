@@ -1,5 +1,6 @@
 package com.OnlineQuiz.OnlineQuiz.Controller;
 
+
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +23,7 @@ import com.OnlineQuiz.OnlineQuiz.Entity.Question;
 import com.OnlineQuiz.OnlineQuiz.Entity.Quiz;
 import com.OnlineQuiz.OnlineQuiz.Entity.RoomId;
 import com.OnlineQuiz.OnlineQuiz.Entity.User;
+import com.OnlineQuiz.OnlineQuiz.Exception.ResourceNotFoundException;
 import com.OnlineQuiz.OnlineQuiz.Reposistory.ExamRepository;
 import com.OnlineQuiz.OnlineQuiz.Reposistory.ParticipantRepo;
 import com.OnlineQuiz.OnlineQuiz.Reposistory.UserRepository;
@@ -137,70 +139,64 @@ public class QuizController {
     // Controller for join room
     @PostMapping("/join-room")
     public ResponseEntity<Map<String, Object>> joinQuiz(@RequestBody Map<String, String> request) {
-        String roomCode = request.get("roomCode");
-        String email = request.get("email");
-
-        Optional<RoomId> roomOpt = roomRepository.findByRoomCode(roomCode);
-        if (roomOpt.isEmpty()) {
-            return ResponseEntity.status(404)
-                    .body(Map.of("status", "error", "message", "Room Code Is Not Match"));
+        try {
+            String roomCode = request.get("roomCode");
+            String email = request.get("email");
+    
+            // Input validation
+            if (roomCode == null || email == null) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("status", "error", "message", "Room code and email are required"));
+            }
+    
+            // Find room and user
+            RoomId room = roomRepository.findByRoomCode(roomCode)
+                    .orElseThrow(() -> new ResourceNotFoundException("Room not found with code: " + roomCode));
+            
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
+    
+            // Check if already joined
+            boolean alreadyJoined = participantRepo.existsByEmailAndRoom(email, room);
+            
+            if (alreadyJoined) {
+                return ResponseEntity.ok(Map.of(
+                    "status", "info", 
+                    "message", "Already joined", 
+                    "roomCode", room.getRoomCode()
+                ));
+            }
+    
+            // Create and save new participant
+            Participant participant = new Participant();
+            participant.setParticipantName(user.getName());
+            participant.setEmail(email);
+            participant.setRoom(room);
+            participantRepo.save(participant);
+    
+            // Get quiz data from service
+            Map<String, Object> quizData = quizService.getQuestionsByRoomCode(roomCode);
+            
+            // Build response
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", "success");
+            response.put("message", "Joined quiz successfully");
+            response.put("roomCode", roomCode);
+            response.put("participantName", user.getName());
+            response.put("quiz", quizData);
+            
+            return ResponseEntity.ok(response);
+            
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("status", "error", "message", e.getMessage()));
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("status", "error", "message", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("status", "error", "message", "An error occurred while joining the quiz"));
         }
-
-        Optional<User> userOpt = userRepository.findByEmail(email);
-        if (userOpt.isEmpty()) {
-            return ResponseEntity.status(404)
-                    .body(Map.of("status", "error", "message", "User not found"));
-        }
-
-        RoomId room = roomOpt.get();
-        User user = userOpt.get();
-
-        // Check room status
-        // String status = room.getStatus();
-        // if ("EXPIRED".equalsIgnoreCase(status)) {
-        //     return ResponseEntity.status(403).body(Map.of(
-        //             "status", "expired",
-        //             "message", "This quiz has expired and can no longer be joined.",
-        //             "roomCode", room.getRoomCode()));
-        // } else if (!"ACTIVE".equalsIgnoreCase(status)) {
-        //     return ResponseEntity.ok(Map.of(
-        //             "status", "waiting",
-        //             "message", "Quiz not yet delivered. Please wait.",
-        //             "roomCode", room.getRoomCode()));
-        // }
-
-        // Check if already joined
-        boolean alreadyJoined = room.getParticipants().stream()
-                .anyMatch(p -> p.getParticipantName().equals(user.getName()));
-        if (alreadyJoined) {
-            return ResponseEntity
-                    .ok(Map.of("status", "info", "message", "Already joined", "roomCode", room.getRoomCode()));
-        }
-
-        // // Add participant
-        // Participant participant = new Participant();
-        // participant.setParticipantName(user.getName());
-        // participant.setParticipantEmail(user.getEmail());
-        // participant.setRoom(room);
-        // participantRepo.save(participant);
-
-        // Get quiz questions
-        Map<String, Object> quizData = (Map<String, Object>) quizService.getQuestionsByRoomCode(roomCode);
-        
-        // Notify all clients in the room about new participant
-        // messagingTemplate.convertAndSend("/topic/room/" + roomCode + "/participants", Map.of(
-        //     "action", "participant_joined",
-        //     "participantName", user.getName(),
-        //     "totalParticipants", room.getParticipants().size()
-        // ));
-
-        return ResponseEntity.ok(Map.of(
-            "status", "success",
-            "message", "Joined quiz successfully",
-            "roomCode", room.getRoomCode(),
-            "participantName", user.getName(),
-            "quiz", quizData
-        ));
     }
     // Controller for leave the quiz
     @PutMapping("/leave/{email}")
@@ -232,3 +228,6 @@ public class QuizController {
     }
 
 }
+
+
+

@@ -64,6 +64,7 @@ public class GoogleAuthService {
         
     
         Map<String, Object> result = new HashMap<>();
+        result.put("email", email);
         result.put("jwt", jwt);
         result.put("name", name);
         result.put("unique_id",user.getUniqueId());

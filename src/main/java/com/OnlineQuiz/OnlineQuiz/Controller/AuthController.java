@@ -32,6 +32,9 @@ public ResponseEntity<?> loginWithGoogle(@RequestBody Map<String, String> reques
     // Get JWT and user details from service
     Map<String, Object> authResponse = googleAuthService.verifyAndAuthenticateUser(idToken);
 
+    System.out.println("Keys in authResponse: " + authResponse.keySet());
+    String email=(String) authResponse.get("email");
+
     String jwt = (String) authResponse.get("jwt");
     String fullUser = (String) authResponse.get("name");
     String unique_id = (String) authResponse.get("unique_id");
@@ -39,6 +42,7 @@ public ResponseEntity<?> loginWithGoogle(@RequestBody Map<String, String> reques
 
     // Return only necessary data
     Map<String, Object> response = new HashMap<>();
+    response.put("email", email);
     response.put("jwt", jwt);
     response.put("user", fullUser);
     response.put("unique_id", unique_id);
