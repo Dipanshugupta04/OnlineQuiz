@@ -14,7 +14,7 @@ import com.OnlineQuiz.OnlineQuiz.Entity.RoomId;
 
 @Repository
 public interface ParticipantRepo extends JpaRepository<Participant, Long> {
-    Optional<Participant> findByEmail(String email);
+  
 
     // Option 1: Query by RoomId object
     List<Participant> findByRoom(RoomId room);
@@ -29,4 +29,6 @@ public interface ParticipantRepo extends JpaRepository<Participant, Long> {
     List<Map<String, Object>> findByroom_id(@Param("roomCode") String roomCode);
 
     boolean existsByEmailAndRoom(String email, RoomId room);
+
+    Optional<Participant> findByEmail(String participantEmail);
 }

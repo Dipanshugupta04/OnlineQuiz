@@ -4,13 +4,13 @@ import java.util.List;
 
 public class QuizSubmissionDTO {
     private String roomCode;
-    private String userEmail;
+    private String ParticipantEmail;
     private List<AnswerSubmissionDTO> answers;
     // Getters and Setters
 
-    public QuizSubmissionDTO(String roomCode, String userEmail, List<AnswerSubmissionDTO> answers) {
+    public QuizSubmissionDTO(String roomCode, String ParticipantEmail, List<AnswerSubmissionDTO> answers) {
         this.roomCode = roomCode;
-        this.userEmail = userEmail;
+        this.ParticipantEmail = ParticipantEmail;
         this.answers = answers;
     }
 
@@ -22,16 +22,16 @@ public class QuizSubmissionDTO {
         this.roomCode = roomCode;
     }
 
-    public String getUserEmail() {
-        return userEmail;
-    }
-
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
-    }
-
     public List<AnswerSubmissionDTO> getAnswers() {
         return answers;
+    }
+
+    public String getParticipantEmail() {
+        return ParticipantEmail;
+    }
+
+    public void setParticipantEmail(String participantEmail) {
+        ParticipantEmail = participantEmail;
     }
 
     public void setAnswers(List<AnswerSubmissionDTO> answers) {

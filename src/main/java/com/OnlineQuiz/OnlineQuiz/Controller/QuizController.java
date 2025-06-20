@@ -1,6 +1,5 @@
 package com.OnlineQuiz.OnlineQuiz.Controller;
 
-
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -13,23 +12,33 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.OnlineQuiz.OnlineQuiz.DTO.AnswerSubmissionDTO;
 import com.OnlineQuiz.OnlineQuiz.DTO.ExamDTO;
 import com.OnlineQuiz.OnlineQuiz.DTO.QuizRequestDTO;
 import com.OnlineQuiz.OnlineQuiz.DTO.QuizSubmissionDTO;
 import com.OnlineQuiz.OnlineQuiz.DTO.ResultDTO;
+import com.OnlineQuiz.OnlineQuiz.Entity.CorrectOption;
 import com.OnlineQuiz.OnlineQuiz.Entity.Exam;
+import com.OnlineQuiz.OnlineQuiz.Entity.Option;
 import com.OnlineQuiz.OnlineQuiz.Entity.Participant;
 import com.OnlineQuiz.OnlineQuiz.Entity.Question;
 import com.OnlineQuiz.OnlineQuiz.Entity.Quiz;
+import com.OnlineQuiz.OnlineQuiz.Entity.Result;
 import com.OnlineQuiz.OnlineQuiz.Entity.RoomId;
 import com.OnlineQuiz.OnlineQuiz.Entity.User;
 import com.OnlineQuiz.OnlineQuiz.Exception.ResourceNotFoundException;
 import com.OnlineQuiz.OnlineQuiz.Reposistory.ExamRepository;
 import com.OnlineQuiz.OnlineQuiz.Reposistory.ParticipantRepo;
+import com.OnlineQuiz.OnlineQuiz.Reposistory.ResultRepository;
 import com.OnlineQuiz.OnlineQuiz.Reposistory.UserRepository;
+import com.OnlineQuiz.OnlineQuiz.Reposistory.correctOptionRepository;
+import com.OnlineQuiz.OnlineQuiz.Reposistory.questionRepository;
+import com.OnlineQuiz.OnlineQuiz.Reposistory.quizRepository;
 import com.OnlineQuiz.OnlineQuiz.Reposistory.roomIdRepository;
 import com.OnlineQuiz.OnlineQuiz.Service.ExamService;
 import com.OnlineQuiz.OnlineQuiz.Service.QuizService;
+
+import io.jsonwebtoken.Jwts;
 
 @RestController
 
@@ -51,6 +60,14 @@ public class QuizController {
     private ExamRepository examRepository;
     @Autowired
     private ParticipantRepo participantRepo;
+    @Autowired
+    private questionRepository questionRepository;
+    @Autowired
+    private ResultRepository resultRepository;
+    @Autowired
+    private quizRepository quizRepository;
+    @Autowired
+    private correctOptionRepository correctOptionRepository;
 
     // Controller for create quiz
     @PostMapping("/create")
@@ -67,7 +84,6 @@ public class QuizController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
     }
-    
 
     // Controller for Generate Room id for quiz
     @PostMapping("/generate-room/{exam_Id}")
@@ -82,12 +98,12 @@ public class QuizController {
     }
 
     // Controller for create exam details
-     @PostMapping("/exam/create")
+    @PostMapping("/exam/create")
     public ResponseEntity<?> createExam(@RequestBody ExamDTO examDTO) {
         System.out.println(examDTO);
         try {
             Exam exam = examService.createExam(examDTO);
-            
+
             Map<String, Object> response = new HashMap<>();
             response.put("status", "success");
             response.put("examId", exam.getId());
@@ -95,7 +111,7 @@ public class QuizController {
             response.put("endDateTime", exam.getEndDateTime());
             response.put("examDescription", exam.getExamDescription());
             // response.put("roomid", exam.get)
-            
+
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, String> errorResponse = new HashMap<>();
@@ -104,7 +120,8 @@ public class QuizController {
             return ResponseEntity.badRequest().body(errorResponse);
         }
     }
-    //Update exma Data
+
+    // Update exma Data
     @PutMapping("/update-by-room/{roomCode}") // Using PUT for updates
     public ResponseEntity<?> updateExamByRoomCode(@PathVariable String roomCode, @RequestBody ExamDTO examDTO) {
         if (roomCode == null || roomCode.trim().isEmpty()) {
@@ -132,7 +149,7 @@ public class QuizController {
         } catch (Exception e) {
             e.printStackTrace(); // Log the full stack trace for debugging
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                 .body(Map.of("status", "error", "message", "An unexpected error occurred: " + e.getMessage()));
+                    .body(Map.of("status", "error", "message", "An unexpected error occurred: " + e.getMessage()));
         }
     }
 
@@ -142,41 +159,40 @@ public class QuizController {
         try {
             String roomCode = request.get("roomCode");
             String email = request.get("email");
-    
+
             // Input validation
             if (roomCode == null || email == null) {
                 return ResponseEntity.badRequest()
                         .body(Map.of("status", "error", "message", "Room code and email are required"));
             }
-    
+
             // Find room and user
             RoomId room = roomRepository.findByRoomCode(roomCode)
                     .orElseThrow(() -> new ResourceNotFoundException("Room not found with code: " + roomCode));
-            
+
             User user = userRepository.findByEmail(email)
                     .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
-    
+
             // Check if already joined
             boolean alreadyJoined = participantRepo.existsByEmailAndRoom(email, room);
-            
+
             if (alreadyJoined) {
                 return ResponseEntity.ok(Map.of(
-                    "status", "info", 
-                    "message", "Already joined", 
-                    "roomCode", room.getRoomCode()
-                ));
+                        "status", "info",
+                        "message", "Already joined",
+                        "roomCode", room.getRoomCode()));
             }
-    
+
             // Create and save new participant
             Participant participant = new Participant();
             participant.setParticipantName(user.getName());
             participant.setEmail(email);
             participant.setRoom(room);
             participantRepo.save(participant);
-    
+
             // Get quiz data from service
             Map<String, Object> quizData = quizService.getQuestionsByRoomCode(roomCode);
-            
+
             // Build response
             Map<String, Object> response = new HashMap<>();
             response.put("status", "success");
@@ -184,9 +200,9 @@ public class QuizController {
             response.put("roomCode", roomCode);
             response.put("participantName", user.getName());
             response.put("quiz", quizData);
-            
+
             return ResponseEntity.ok(response);
-            
+
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Map.of("status", "error", "message", e.getMessage()));
@@ -198,28 +214,23 @@ public class QuizController {
                     .body(Map.of("status", "error", "message", "An error occurred while joining the quiz"));
         }
     }
+
     // Controller for leave the quiz
-    @PutMapping("/leave/{email}")
-    public ResponseEntity<String> leaveRoom(@PathVariable String email) {
-        System.out.println(email);
-        Optional<Participant> userEmail = participantRepo.findByEmail(email);
+    @DeleteMapping("/leave/{email}")
+public ResponseEntity<String> leaveRoom(@PathVariable String email) {
+    System.out.println(email);
+    Optional<Participant> optionalParticipant = participantRepo.findByEmail(email);
 
-        if (userEmail.isEmpty()) {
-            return ResponseEntity.status(404).body("User not found");
-        }
-
-        Participant participant = userEmail.get();
-        participantRepo.deleteById(participant.getId());
-
-        return ResponseEntity.ok("Participant removed successfully");
+    if (optionalParticipant.isEmpty()) {
+        return ResponseEntity.status(404).body("User not found");
     }
 
-    // Controller for submit the user quiz answer response
-    @PostMapping("/submit")
-    public ResponseEntity<ResultDTO> submitQuiz(@RequestBody QuizSubmissionDTO submission) {
-        ResultDTO result = quizService.evaluateSubmission(submission);
-        return ResponseEntity.ok(result);
-    }
+    Participant participant = optionalParticipant.get();
+    participantRepo.delete(participant);
+
+    return ResponseEntity.ok("Participant removed successfully");
+}
+
 
     // Controller for testing
     @GetMapping("/home")
@@ -227,7 +238,91 @@ public class QuizController {
         return "this is home";
     }
 
-}
 
 
 
+    
+    @PostMapping("/submit")
+    public ResponseEntity<Map<String, Object>> submitQuiz(@RequestBody QuizSubmissionDTO submission) {
+        if (submission.getRoomCode() == null || submission.getAnswers() == null) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "status", "error",
+                    "message", "Room code and answers are required"));
+        }
+    
+        String roomCode = submission.getRoomCode();
+    
+        try {
+            // 1. Find Quiz by Room Code
+            Quiz quiz = quizRepository.findByroomid(roomCode);
+            if (quiz == null) {
+                throw new ResourceNotFoundException("Quiz not found for room code: " + roomCode);
+            }
+    
+            // 2. Get Questions of the Quiz
+            List<Question> questions = questionRepository.findByquiz_id(quiz.getId());
+    
+            // 3. Initialize Scoring
+            int score = 0;
+            Map<Long, Boolean> results = new HashMap<>();
+    
+            // 4. Process Each Question
+            for (Question question : questions) {
+                AnswerSubmissionDTO answer = submission.getAnswers().stream()
+                        .filter(a -> a.getQuestionId().equals(question.getId()))
+                        .findFirst()
+                        .orElse(null);
+    
+                        if (answer != null) {
+                            Optional<CorrectOption> correctOptionOpt = correctOptionRepository.findByQuestionId(question.getId());
+                        
+                            boolean isCorrect = correctOptionOpt.isPresent() &&
+                                    correctOptionOpt.get().getOption().getId().equals(answer.getSelectedOptionId());
+                        
+                            results.put(question.getId(), isCorrect);
+                            if (isCorrect) score++;
+                        }
+                        
+            }
+    
+            // 5. Get Participant
+            Optional<Participant> optionalParticipant = participantRepo.findByEmail(submission.getParticipantEmail());
+            if (optionalParticipant.isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of(
+                        "status", "error",
+                        "message", "Participant not found with this email"
+                ));
+            }
+    
+            Participant participant = optionalParticipant.get();
+    
+            // 6. Save Result
+            Result result = new Result();
+            result.setParticipant(participant); // assuming mapped with @ManyToOne
+            result.setQuizTitle(quiz.getTitle()); // or getExamName()
+            result.setScore(score);
+            result.setSubmittedAt(LocalDateTime.now());
+    
+            resultRepository.save(result);
+    
+            // 7. Prepare and Return Response
+            return ResponseEntity.ok(Map.of(
+                    "status", "success",
+                    "score", score,
+                    "totalQuestions", questions.size(),
+                    "results", results
+            ));
+    
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
+                    "status", "error",
+                    "message", e.getMessage()));
+        }  catch (Exception e) {
+            e.printStackTrace(); // ✅ Print full stack trace
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                    "status", "error",
+                    "message", "An error occurred while processing your submission"));
+        }
+        
+    }
+}    

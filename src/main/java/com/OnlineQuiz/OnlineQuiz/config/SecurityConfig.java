@@ -63,6 +63,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/quiz/create",
                                 "/quiz/exam/create",
+                                "quiz/leave/**",
                                 "/quiz/leave/**",
                                 "/api/home",
                                 "/api/exam/**",
