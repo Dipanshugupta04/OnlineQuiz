@@ -55,6 +55,7 @@ public class SecurityConfig {
                                 "/api/auth/**",
                                 "/api/register",
                                 "/api/login",
+                                "/auth/github",
 
                                 "/quiz/join-room",
                                 "/quiz/questions/**"

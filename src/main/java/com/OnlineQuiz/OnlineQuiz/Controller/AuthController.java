@@ -2,6 +2,7 @@ package com.OnlineQuiz.OnlineQuiz.Controller;
 
 import com.OnlineQuiz.OnlineQuiz.Entity.User;
 import com.OnlineQuiz.OnlineQuiz.Service.GoogleAuthService;
+import com.OnlineQuiz.OnlineQuiz.Service.gitHubAuthService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +23,8 @@ public class AuthController {
 
     @Autowired
     private GoogleAuthService googleAuthService;
+    @Autowired
+    private gitHubAuthService gitHubAuthService;
 
     // Controller for oauth2
    @PostMapping("/google")
@@ -47,6 +50,31 @@ public ResponseEntity<?> loginWithGoogle(@RequestBody Map<String, String> reques
     response.put("user", fullUser);
     response.put("unique_id", unique_id);
 
+    return ResponseEntity.ok(response);
+}
+
+
+@PostMapping("/github")
+public ResponseEntity<?> loginWithGitHub(@RequestBody Map<String, String> request) {
+    try {
+        String code = request.get("code");
+        if (code == null || code.isEmpty()) {
+            return ResponseEntity.badRequest().body("Authorization code is required");
+        }
+        
+        Map<String, Object> authResponse = gitHubAuthService.verifyAndAuthenticateGitHubUser(code);
+        return buildAuthResponse(authResponse);
+    } catch (Exception e) {
+        return ResponseEntity.internalServerError().body("Authentication failed: " + e.getMessage());
+    }
+}
+
+private ResponseEntity<?> buildAuthResponse(Map<String, Object> authResponse) {
+    Map<String, Object> response = new HashMap<>();
+    response.put("email", authResponse.get("email"));
+    response.put("jwt", authResponse.get("jwt"));
+    response.put("user", authResponse.get("user"));
+    response.put("unique_id", authResponse.get("unique_id"));
     return ResponseEntity.ok(response);
 }
 
