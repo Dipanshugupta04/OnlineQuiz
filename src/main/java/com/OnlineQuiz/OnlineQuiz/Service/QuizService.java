@@ -163,6 +163,8 @@ public class QuizService {
             
         // Get questions for the quiz
         List<Question> questionList = questionRepository.findByquiz_id(quiz.getId());
+
+       
         
         // Transform questions to the required format
         List<Map<String, Object>> questions = questionList.stream()
@@ -170,6 +172,7 @@ public class QuizService {
                 Map<String, Object> questionMap = new HashMap<>();
                 questionMap.put("id", question.getId());
                 questionMap.put("text", question.getQuestionText());
+               
                 
                 List<Map<String, String>> options = question.getOptions().stream()
                     .map(option -> {

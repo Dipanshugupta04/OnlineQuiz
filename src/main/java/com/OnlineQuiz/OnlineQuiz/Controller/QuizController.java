@@ -1,6 +1,7 @@
 package com.OnlineQuiz.OnlineQuiz.Controller;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,7 @@ import com.OnlineQuiz.OnlineQuiz.Reposistory.quizRepository;
 import com.OnlineQuiz.OnlineQuiz.Reposistory.roomIdRepository;
 import com.OnlineQuiz.OnlineQuiz.Service.ExamService;
 import com.OnlineQuiz.OnlineQuiz.Service.QuizService;
+import com.OnlineQuiz.OnlineQuiz.Service.participantService;
 
 import io.jsonwebtoken.Jwts;
 
@@ -68,6 +70,11 @@ public class QuizController {
     private quizRepository quizRepository;
     @Autowired
     private correctOptionRepository correctOptionRepository;
+@Autowired
+private participantService participantService;
+    @Autowired
+    private roomIdRepository roomIdRepository;
+
 
     // Controller for create quiz
     @PostMapping("/create")
@@ -179,7 +186,7 @@ public class QuizController {
             if (alreadyJoined) {
                 return ResponseEntity.ok(Map.of(
                         "status", "info",
-                        "message", "Already joined",
+                        "message", "Already joined/You have completed your exam?",
                         "roomCode", room.getRoomCode()));
             }
 
@@ -192,6 +199,11 @@ public class QuizController {
 
             // Get quiz data from service
             Map<String, Object> quizData = quizService.getQuestionsByRoomCode(roomCode);
+            System.out.println("exam Start date is ------"+room.getExam().getStartDateTime());
+
+
+
+
 
             // Build response
             Map<String, Object> response = new HashMap<>();
@@ -200,6 +212,8 @@ public class QuizController {
             response.put("roomCode", roomCode);
             response.put("participantName", user.getName());
             response.put("quiz", quizData);
+            response.put("startdate",room.getExam().getStartDateTime());
+            response.put("durationTime",room.getExam().getDurationMinutes());
 
             return ResponseEntity.ok(response);
 
@@ -216,20 +230,30 @@ public class QuizController {
     }
 
     // Controller for leave the quiz
-    @DeleteMapping("/leave/{email}")
-public ResponseEntity<String> leaveRoom(@PathVariable String email) {
-    System.out.println(email);
-    Optional<Participant> optionalParticipant = participantRepo.findByEmail(email);
-
-    if (optionalParticipant.isEmpty()) {
-        return ResponseEntity.status(404).body("User not found");
+    @DeleteMapping("/leave/{roomCode}")
+public ResponseEntity<String> leaveRoom(@PathVariable String roomCode) {
+    // 1. Find the RoomId entity using roomCode
+    Optional<RoomId> optionalRoom = roomIdRepository.findByRoomCode(roomCode);
+    if (optionalRoom.isEmpty()) {
+        return ResponseEntity.status(404).body("Room not found");
     }
 
-    Participant participant = optionalParticipant.get();
+    RoomId room = optionalRoom.get();
+
+    // 2. Find participants in this room
+    List<Participant> participants = participantRepo.findByRoom(room);
+    if (participants.isEmpty()) {
+        return ResponseEntity.status(404).body("No participants found for this room");
+    }
+
+    // 3. Delete first participant (or apply custom logic)
+    Participant participant = participants.get(0);
     participantRepo.delete(participant);
 
-    return ResponseEntity.ok("Participant removed successfully");
+    return ResponseEntity.ok("Participant removed successfully: " + participant.getParticipantName());
 }
+
+
 
 
     // Controller for testing
@@ -286,7 +310,7 @@ public ResponseEntity<String> leaveRoom(@PathVariable String email) {
             }
     
             // 5. Get Participant
-            Optional<Participant> optionalParticipant = participantRepo.findByEmail(submission.getParticipantEmail());
+            List<Participant> optionalParticipant = participantRepo.findByEmail(submission.getParticipantEmail());
             if (optionalParticipant.isEmpty()) {
                 return ResponseEntity.badRequest().body(Map.of(
                         "status", "error",
@@ -294,7 +318,7 @@ public ResponseEntity<String> leaveRoom(@PathVariable String email) {
                 ));
             }
     
-            Participant participant = optionalParticipant.get();
+            Participant participant = optionalParticipant.get(0);
     
             // 6. Save Result
             Result result = new Result();
@@ -325,4 +349,14 @@ public ResponseEntity<String> leaveRoom(@PathVariable String email) {
         }
         
     }
+
+
+    //get participent
+
+    @GetMapping("/participants/count/{roomCode}")
+public ResponseEntity<?> getParticipantCount(@PathVariable String roomCode) {
+    int count = participantService.countByRoomCode(roomCode);
+    return ResponseEntity.ok(Collections.singletonMap("count", count));
+}
+
 }    

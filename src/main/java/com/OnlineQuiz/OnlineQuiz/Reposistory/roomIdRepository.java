@@ -18,4 +18,6 @@ public interface roomIdRepository extends JpaRepository<RoomId, Long> {
 
     
 
+    
+
 }
