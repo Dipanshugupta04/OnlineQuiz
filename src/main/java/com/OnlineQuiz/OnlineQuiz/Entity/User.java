@@ -25,8 +25,13 @@ public class User implements UserDetails {
     private String password;
 
     private String confirmPassword;
+    @Lob
+    @Column(name = "profile_picture", columnDefinition = "LONGBLOB")
+    private byte[] profilePicture;
 
     private String pictureUrl;
+
+    private String contactNo;
 
     private String role;
    
@@ -35,6 +40,22 @@ public class User implements UserDetails {
     
 
     
+
+    public byte[] getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(byte[] profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    public String getContactNo() {
+        return contactNo;
+    }
+
+    public void setContactNo(String contactNo) {
+        this.contactNo = contactNo;
+    }
 
     public Long getId() {
         return id;
@@ -129,5 +150,14 @@ public class User implements UserDetails {
     public void setUniqueId(String uniqueId) {
         this.uniqueId = uniqueId;
     }
+
+    public String getcontactNo() {
+        return contactNo;
+    }
+
+    public void setcontactNo(String contactNo) {
+        this.contactNo = contactNo;
+    }
+    
 
 }

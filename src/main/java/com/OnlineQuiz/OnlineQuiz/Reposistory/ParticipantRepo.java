@@ -30,6 +30,6 @@ public interface ParticipantRepo extends JpaRepository<Participant, Long> {
 
     boolean existsByEmailAndRoom(String email, RoomId room);
 
-    List<Participant> findByEmail(String participantEmail);
+    Participant findByEmail(String participantEmail);
    
 }

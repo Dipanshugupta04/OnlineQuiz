@@ -19,7 +19,7 @@ public class Result {
     @ManyToOne
 @JoinColumn(name = "participant_id") // Column in Result table
 private Participant participant;
-
+    private String participentEmail;
     private String quizTitle;
     private int score;
     private LocalDateTime submittedAt;
@@ -53,6 +53,12 @@ private Participant participant;
     }
     public void setParticipant(Participant participant) {
         this.participant = participant;
+    }
+    public String getParticipentEmail() {
+        return participentEmail;
+    }
+    public void setParticipentEmail(String participentEmail) {
+        this.participentEmail = participentEmail;
     }
     
     

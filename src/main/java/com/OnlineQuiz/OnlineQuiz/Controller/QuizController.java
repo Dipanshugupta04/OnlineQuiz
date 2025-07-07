@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -70,11 +71,10 @@ public class QuizController {
     private quizRepository quizRepository;
     @Autowired
     private correctOptionRepository correctOptionRepository;
-@Autowired
-private participantService participantService;
+    @Autowired
+    private participantService participantService;
     @Autowired
     private roomIdRepository roomIdRepository;
-
 
     // Controller for create quiz
     @PostMapping("/create")
@@ -199,11 +199,7 @@ private participantService participantService;
 
             // Get quiz data from service
             Map<String, Object> quizData = quizService.getQuestionsByRoomCode(roomCode);
-            System.out.println("exam Start date is ------"+room.getExam().getStartDateTime());
-
-
-
-
+            System.out.println("exam Start date is ------" + room.getExam().getStartDateTime());
 
             // Build response
             Map<String, Object> response = new HashMap<>();
@@ -212,8 +208,8 @@ private participantService participantService;
             response.put("roomCode", roomCode);
             response.put("participantName", user.getName());
             response.put("quiz", quizData);
-            response.put("startdate",room.getExam().getStartDateTime());
-            response.put("durationTime",room.getExam().getDurationMinutes());
+            response.put("startdate", room.getExam().getStartDateTime());
+            response.put("durationTime", room.getExam().getDurationMinutes());
 
             return ResponseEntity.ok(response);
 
@@ -231,30 +227,27 @@ private participantService participantService;
 
     // Controller for leave the quiz
     @DeleteMapping("/leave/{roomCode}")
-public ResponseEntity<String> leaveRoom(@PathVariable String roomCode) {
-    // 1. Find the RoomId entity using roomCode
-    Optional<RoomId> optionalRoom = roomIdRepository.findByRoomCode(roomCode);
-    if (optionalRoom.isEmpty()) {
-        return ResponseEntity.status(404).body("Room not found");
+    public ResponseEntity<String> leaveRoom(@PathVariable String roomCode) {
+        // 1. Find the RoomId entity using roomCode
+        Optional<RoomId> optionalRoom = roomIdRepository.findByRoomCode(roomCode);
+        if (optionalRoom.isEmpty()) {
+            return ResponseEntity.status(404).body("Room not found");
+        }
+
+        RoomId room = optionalRoom.get();
+
+        // 2. Find participants in this room
+        List<Participant> participants = participantRepo.findByRoom(room);
+        if (participants.isEmpty()) {
+            return ResponseEntity.status(404).body("No participants found for this room");
+        }
+
+        // 3. Delete first participant (or apply custom logic)
+        Participant participant = participants.get(0);
+        participantRepo.delete(participant);
+
+        return ResponseEntity.ok("Participant removed successfully: " + participant.getParticipantName());
     }
-
-    RoomId room = optionalRoom.get();
-
-    // 2. Find participants in this room
-    List<Participant> participants = participantRepo.findByRoom(room);
-    if (participants.isEmpty()) {
-        return ResponseEntity.status(404).body("No participants found for this room");
-    }
-
-    // 3. Delete first participant (or apply custom logic)
-    Participant participant = participants.get(0);
-    participantRepo.delete(participant);
-
-    return ResponseEntity.ok("Participant removed successfully: " + participant.getParticipantName());
-}
-
-
-
 
     // Controller for testing
     @GetMapping("/home")
@@ -262,16 +255,12 @@ public ResponseEntity<String> leaveRoom(@PathVariable String roomCode) {
         return "this is home";
     }
 
-
-
-
-    
     @PostMapping("/submit")
     public ResponseEntity<Map<String, Object>> submitQuiz(@RequestBody QuizSubmissionDTO submission) {
-        if (submission.getRoomCode() == null || submission.getAnswers() == null) {
+        if (submission.getRoomCode() == null || submission.getAnswers() == null || submission.getParticipantEmail() == null) {
             return ResponseEntity.badRequest().body(Map.of(
                     "status", "error",
-                    "message", "Room code and answers are required"));
+                    "message", "Room code, answers, and user email are required"));
         }
     
         String roomCode = submission.getRoomCode();
@@ -297,66 +286,75 @@ public ResponseEntity<String> leaveRoom(@PathVariable String roomCode) {
                         .findFirst()
                         .orElse(null);
     
-                        if (answer != null) {
-                            Optional<CorrectOption> correctOptionOpt = correctOptionRepository.findByQuestionId(question.getId());
-                        
-                            boolean isCorrect = correctOptionOpt.isPresent() &&
-                                    correctOptionOpt.get().getOption().getId().equals(answer.getSelectedOptionId());
-                        
-                            results.put(question.getId(), isCorrect);
-                            if (isCorrect) score++;
-                        }
-                        
+                if (answer != null) {
+                    Optional<CorrectOption> correctOptionOpt = correctOptionRepository
+                            .findByQuestionId(question.getId());
+    
+                    boolean isCorrect = correctOptionOpt.isPresent() &&
+                            correctOptionOpt.get().getOption().getId().equals(answer.getSelectedOptionId());
+    
+                    results.put(question.getId(), isCorrect);
+                    if (isCorrect) score++;
+                }
             }
     
-            // 5. Get Participant
-            List<Participant> optionalParticipant = participantRepo.findByEmail(submission.getParticipantEmail());
-            if (optionalParticipant.isEmpty()) {
+            // 5. Get Participant by Email from Room
+            Optional<RoomId> roomIdOptional = roomIdRepository.findByRoomCode(roomCode);
+            if (roomIdOptional.isEmpty()) {
                 return ResponseEntity.badRequest().body(Map.of(
                         "status", "error",
-                        "message", "Participant not found with this email"
-                ));
+                        "message", "Room not found for room code: " + roomCode));
             }
     
-            Participant participant = optionalParticipant.get(0);
+            RoomId room = roomIdOptional.get();
+            Participant participant = room.getParticipants().stream()
+                    .filter(p -> p.getEmail().equalsIgnoreCase(submission.getParticipantEmail()))
+                    .findFirst()
+                    .orElse(null);
+    
+            if (participant == null) {
+                return ResponseEntity.badRequest().body(Map.of(
+                        "status", "error",
+                        "message", "Participant not found with this email in the room"));
+            }
     
             // 6. Save Result
             Result result = new Result();
-            result.setParticipant(participant); // assuming mapped with @ManyToOne
-            result.setQuizTitle(quiz.getTitle()); // or getExamName()
+            result.setParticipentEmail(participant.getEmail());
+            result.setParticipant(participant);
+            result.setQuizTitle(quiz.getTitle());
             result.setScore(score);
             result.setSubmittedAt(LocalDateTime.now());
     
             resultRepository.save(result);
     
-            // 7. Prepare and Return Response
+            // 7. Return success response
             return ResponseEntity.ok(Map.of(
                     "status", "success",
                     "score", score,
                     "totalQuestions", questions.size(),
-                    "results", results
-            ));
+                    "results", results,
+                    "message", "Quiz submitted and result saved!"));
     
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
                     "status", "error",
                     "message", e.getMessage()));
-        }  catch (Exception e) {
-            e.printStackTrace(); // ✅ Print full stack trace
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
                     "status", "error",
                     "message", "An error occurred while processing your submission"));
         }
-        
     }
+    
 
-
-    //get participent
+    // get participent
 
     @GetMapping("/participants/count/{roomCode}")
-public ResponseEntity<?> getParticipantCount(@PathVariable String roomCode) {
-    int count = participantService.countByRoomCode(roomCode);
-    return ResponseEntity.ok(Collections.singletonMap("count", count));
-}
+    public ResponseEntity<?> getParticipantCount(@PathVariable String roomCode) {
+        int count = participantService.countByRoomCode(roomCode);
+        return ResponseEntity.ok(Collections.singletonMap("count", count));
+    }
 
-}    
+}

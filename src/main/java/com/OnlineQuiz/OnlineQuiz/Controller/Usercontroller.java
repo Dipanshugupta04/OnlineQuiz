@@ -1,6 +1,7 @@
 
 package com.OnlineQuiz.OnlineQuiz.Controller;
 
+import java.security.Principal;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,16 +15,19 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.Authentication;
 
+import com.OnlineQuiz.OnlineQuiz.DTO.EditProfileRequest;
 import com.OnlineQuiz.OnlineQuiz.Entity.User;
 import com.OnlineQuiz.OnlineQuiz.Reposistory.UserRepository;
 import com.OnlineQuiz.OnlineQuiz.Service.AuthService;
 import com.OnlineQuiz.OnlineQuiz.Service.JWTService;
+import com.OnlineQuiz.OnlineQuiz.Service.userService;
 
 @CrossOrigin(origins = { "http://127.0.0.1:5502", "http://localhost:5502" })
 @RestController
@@ -36,6 +40,9 @@ public class Usercontroller {
     private AuthService authService;
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private userService userService;
 
     @Autowired
     private JWTService jwtService;
@@ -117,4 +124,16 @@ public ResponseEntity<?> login(@RequestBody User user) {
     //     return ResponseEntity.ok(Map.of("message", "Hello " + email + ", you accessed protected data!"));
     // }
 
+
+
+    @PutMapping("/edit-profile")
+    public ResponseEntity<?> editProfile(@RequestBody EditProfileRequest request, Principal principal) {
+        try {
+            String email = principal.getName(); // From authenticated user
+            String message = userService.updateProfile(email, request);
+            return ResponseEntity.ok(message);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
+    }
 }
