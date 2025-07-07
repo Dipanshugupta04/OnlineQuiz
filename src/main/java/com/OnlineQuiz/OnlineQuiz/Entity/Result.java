@@ -22,6 +22,7 @@ private Participant participant;
     private String participentEmail;
     private String quizTitle;
     private int score;
+    private int marks;
     private LocalDateTime submittedAt;
     public Long getId() {
         return id;
@@ -59,6 +60,12 @@ private Participant participant;
     }
     public void setParticipentEmail(String participentEmail) {
         this.participentEmail = participentEmail;
+    }
+    public int getMarks() {
+        return marks;
+    }
+    public void setMarks(int marks) {
+        this.marks = marks;
     }
     
     

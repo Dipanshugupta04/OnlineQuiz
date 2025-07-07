@@ -69,7 +69,8 @@ public class SecurityConfig {
                                 "/api/home",
                                 "/api/exam/**",
                                 "/api/quizzes/** ",
-                                "/api/edit-profile")
+                                "/api/edit-profile",
+                                "/api/user")
                         .authenticated()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

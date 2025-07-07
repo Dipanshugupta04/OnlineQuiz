@@ -46,17 +46,29 @@ public class Usercontroller {
 
     @Autowired
     private JWTService jwtService;
+    
+
 
     // Controller for fetch the user in database
     @GetMapping("/user")
-    public ResponseEntity<?> getUserDetails(Authentication authentication) {
+    public ResponseEntity<?> getUserDetails(Authentication authentication ) {
         if (authentication == null || authentication.getPrincipal() == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
         }
+        String userEmail=authentication.getName();
 
-        String username = authentication.getName();
+     User useremail=userRepository.findByemail(userEmail);
 
-        return ResponseEntity.ok(username);
+
+
+        // Create a response map with selected fields
+        Map<String, Object> userDetails = new HashMap<>();
+        userDetails.put("email", useremail.getEmail());
+        userDetails.put("name", useremail.getName());
+        userDetails.put("uniqueId", useremail.getUniqueId());
+        userDetails.put("contact", useremail.getContactNo());
+    
+        return ResponseEntity.ok(userDetails);
     }
 
     // Controller for login

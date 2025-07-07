@@ -209,6 +209,7 @@ public class QuizController {
             response.put("participantName", user.getName());
             response.put("quiz", quizData);
             response.put("startdate", room.getExam().getStartDateTime());
+            response.put("enddate", room.getExam().getEndDateTime());
             response.put("durationTime", room.getExam().getDurationMinutes());
 
             return ResponseEntity.ok(response);
@@ -276,7 +277,7 @@ public class QuizController {
             List<Question> questions = questionRepository.findByquiz_id(quiz.getId());
     
             // 3. Initialize Scoring
-            int score = 0;
+            int marks = 0;
             Map<Long, Boolean> results = new HashMap<>();
     
             // 4. Process Each Question
@@ -287,18 +288,21 @@ public class QuizController {
                         .orElse(null);
     
                 if (answer != null) {
-                    Optional<CorrectOption> correctOptionOpt = correctOptionRepository
-                            .findByQuestionId(question.getId());
+                    Optional<CorrectOption> correctOptionOpt = correctOptionRepository.findByQuestionId(question.getId());
     
                     boolean isCorrect = correctOptionOpt.isPresent() &&
                             correctOptionOpt.get().getOption().getId().equals(answer.getSelectedOptionId());
     
                     results.put(question.getId(), isCorrect);
-                    if (isCorrect) score++;
+                    if (isCorrect) marks++;
                 }
             }
     
-            // 5. Get Participant by Email from Room
+            // 5. Calculate score percentage
+            int totalQuestions = questions.size();
+            int score = (int) ((double) marks / totalQuestions * 100);
+    
+            // 6. Get Participant by Email from Room
             Optional<RoomId> roomIdOptional = roomIdRepository.findByRoomCode(roomCode);
             if (roomIdOptional.isEmpty()) {
                 return ResponseEntity.badRequest().body(Map.of(
@@ -318,21 +322,23 @@ public class QuizController {
                         "message", "Participant not found with this email in the room"));
             }
     
-            // 6. Save Result
+            // 7. Save Result
             Result result = new Result();
             result.setParticipentEmail(participant.getEmail());
             result.setParticipant(participant);
             result.setQuizTitle(quiz.getTitle());
             result.setScore(score);
+            result.setMarks(marks);
             result.setSubmittedAt(LocalDateTime.now());
     
             resultRepository.save(result);
     
-            // 7. Return success response
+            // 8. Return success response
             return ResponseEntity.ok(Map.of(
                     "status", "success",
                     "score", score,
-                    "totalQuestions", questions.size(),
+                    "marks", marks,
+                    "totalQuestions", totalQuestions,
                     "results", results,
                     "message", "Quiz submitted and result saved!"));
     
