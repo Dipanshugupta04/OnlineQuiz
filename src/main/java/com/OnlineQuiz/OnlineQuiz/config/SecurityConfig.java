@@ -70,7 +70,8 @@ public class SecurityConfig {
                                 "/api/exam/**",
                                 "/api/quizzes/** ",
                                 "/api/edit-profile",
-                                "/api/user")
+                                "/api/user",
+                                "/send")
                         .authenticated()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

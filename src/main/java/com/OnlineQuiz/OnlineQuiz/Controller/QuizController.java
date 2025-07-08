@@ -228,27 +228,25 @@ public class QuizController {
 
     // Controller for leave the quiz
     @DeleteMapping("/leave/{roomCode}")
-    public ResponseEntity<String> leaveRoom(@PathVariable String roomCode) {
-        // 1. Find the RoomId entity using roomCode
-        Optional<RoomId> optionalRoom = roomIdRepository.findByRoomCode(roomCode);
-        if (optionalRoom.isEmpty()) {
-            return ResponseEntity.status(404).body("Room not found");
-        }
-
-        RoomId room = optionalRoom.get();
-
-        // 2. Find participants in this room
-        List<Participant> participants = participantRepo.findByRoom(room);
-        if (participants.isEmpty()) {
-            return ResponseEntity.status(404).body("No participants found for this room");
-        }
-
-        // 3. Delete first participant (or apply custom logic)
-        Participant participant = participants.get(0);
-        participantRepo.delete(participant);
-
-        return ResponseEntity.ok("Participant removed successfully: " + participant.getParticipantName());
+public ResponseEntity<String> leaveRoom(@PathVariable String roomCode) {
+    Optional<RoomId> optionalRoom = roomIdRepository.findByRoomCode(roomCode);
+    if (optionalRoom.isEmpty()) {
+        return ResponseEntity.status(404).body("Room not found");
     }
+
+    RoomId room = optionalRoom.get();
+
+    List<Participant> participants = participantRepo.findByRoom(room); // ✅ fixed
+
+    if (participants.isEmpty()) {
+        return ResponseEntity.status(404).body("No participants found for this room");
+    }
+
+    Participant participant = participants.get(0);
+    participantRepo.delete(participant);
+
+    return ResponseEntity.ok("Participant removed successfully: " + participant.getParticipantName());
+}
 
     // Controller for testing
     @GetMapping("/home")
