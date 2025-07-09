@@ -1,14 +1,11 @@
 package com.OnlineQuiz.OnlineQuiz.DTO;
 
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.Data;
-
 import java.time.LocalDate;
 
-@Data
+
 public class ExamDTO {
     @NotBlank(message = "Exam name is required")
     private String examName;
@@ -30,4 +27,48 @@ public class ExamDTO {
     private String examDescription;
     @NotNull(message = "userid Required")
     private String uniqueId;
+    public String getExamName() {
+        return examName;
+    }
+    public void setExamName(String examName) {
+        this.examName = examName;
+    }
+    public String getCreatedBy() {
+        return createdBy;
+    }
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+    public Integer getDurationMinutes() {
+        return durationMinutes;
+    }
+    public void setDurationMinutes(Integer durationMinutes) {
+        this.durationMinutes = durationMinutes;
+    }
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+    public String getExamDescription() {
+        return examDescription;
+    }
+    public void setExamDescription(String examDescription) {
+        this.examDescription = examDescription;
+    }
+    public String getUniqueId() {
+        return uniqueId;
+    }
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
+    }
+
+
 }
