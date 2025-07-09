@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +16,8 @@ import com.OnlineQuiz.OnlineQuiz.DTO.AnswerSubmissionDTO;
 import com.OnlineQuiz.OnlineQuiz.DTO.ExamDTO;
 import com.OnlineQuiz.OnlineQuiz.DTO.QuizRequestDTO;
 import com.OnlineQuiz.OnlineQuiz.DTO.QuizSubmissionDTO;
-import com.OnlineQuiz.OnlineQuiz.DTO.ResultDTO;
 import com.OnlineQuiz.OnlineQuiz.Entity.CorrectOption;
 import com.OnlineQuiz.OnlineQuiz.Entity.Exam;
-import com.OnlineQuiz.OnlineQuiz.Entity.Option;
 import com.OnlineQuiz.OnlineQuiz.Entity.Participant;
 import com.OnlineQuiz.OnlineQuiz.Entity.Question;
 import com.OnlineQuiz.OnlineQuiz.Entity.Quiz;
@@ -40,8 +36,6 @@ import com.OnlineQuiz.OnlineQuiz.Reposistory.roomIdRepository;
 import com.OnlineQuiz.OnlineQuiz.Service.ExamService;
 import com.OnlineQuiz.OnlineQuiz.Service.QuizService;
 import com.OnlineQuiz.OnlineQuiz.Service.participantService;
-
-import io.jsonwebtoken.Jwts;
 
 @RestController
 

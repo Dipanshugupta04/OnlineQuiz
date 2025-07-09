@@ -27,6 +27,8 @@ public class ExamDTO {
     private String examDescription;
     @NotNull(message = "userid Required")
     private String uniqueId;
+
+    
     public String getExamName() {
         return examName;
     }
@@ -69,6 +71,7 @@ public class ExamDTO {
     public void setUniqueId(String uniqueId) {
         this.uniqueId = uniqueId;
     }
+
 
 
 }
