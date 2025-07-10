@@ -13,7 +13,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                    .allowedOrigins("http://127.0.0.1:5502", "http://localhost:5502")
+                    .allowedOrigins("https://majestic-kangaroo-33ba55.netlify.app","http://quizwiz-frontend.s3-website.ap-south-1.amazonaws.com ")
                     .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                     .allowedHeaders("*")
                     .allowCredentials(true);

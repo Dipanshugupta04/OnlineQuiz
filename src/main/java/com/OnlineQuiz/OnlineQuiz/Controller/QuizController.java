@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -38,7 +39,7 @@ import com.OnlineQuiz.OnlineQuiz.Service.QuizService;
 import com.OnlineQuiz.OnlineQuiz.Service.participantService;
 
 @RestController
-
+@CrossOrigin(origins = {"http://quizwiz-frontend.s3-website.ap-south-1.amazonaws.com ","https://majestic-kangaroo-33ba55.netlify.app", "http://127.0.0.1:5502", "http://localhost:5502","https://heroic-sunburst-56c10d.netlify.app" })
 @RequestMapping("/quiz")
 // Quiz Controller
 public class QuizController {
@@ -243,10 +244,19 @@ public ResponseEntity<String> leaveRoom(@PathVariable String roomCode) {
 }
 
     // Controller for testing
+    // @GetMapping("/home")
+    // public String homString() {
+    //     return "this is home";
+    // }
+
+
     @GetMapping("/home")
-    public String homString() {
-        return "this is home";
+    public String home() {
+        return "redirect:/index.html"; // correct redirect path
     }
+    
+
+
 
     @PostMapping("/submit")
     public ResponseEntity<Map<String, Object>> submitQuiz(@RequestBody QuizSubmissionDTO submission) {
