@@ -32,7 +32,7 @@ public class userService {
         }
         System.out.println(request.getcontactNo()+"===============");
         if(request.getcontactNo()!=null && !request.getcontactNo().isBlank()){
-            user.setcontactNo(request.getcontactNo());
+            user.setContactNo(request.getcontactNo());
         }
         userRepository.save(user);
         return "Profile updated successfully!";

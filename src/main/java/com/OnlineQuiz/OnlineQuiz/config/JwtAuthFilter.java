@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -27,6 +28,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Autowired
     private ApplicationContext context;
+
+    private static final List<String> PUBLIC_ENDPOINTS = List.of(
+        "/register",
+        "/login"
+        // add more public endpoints if needed
+);
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

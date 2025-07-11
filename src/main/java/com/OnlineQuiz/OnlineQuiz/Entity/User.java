@@ -38,35 +38,33 @@ public class User implements UserDetails {
     @Column(name = "unique_id", nullable = false)
     private String uniqueId; 
     
+//getter and setter
 
     
 
-    public byte[] getProfilePicture() {
-        return profilePicture;
-    }
+    
 
-    public void setProfilePicture(byte[] profilePicture) {
-        this.profilePicture = profilePicture;
-    }
+  
+  
 
-    public String getContactNo() {
-        return contactNo;
-    }
 
-    public void setContactNo(String contactNo) {
-        this.contactNo = contactNo;
+   
+
+    
+
+  
+
+  
+
+   
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority(role)); // Corrected
     }
 
     public Long getId() {
         return id;
-    }
-
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
     }
 
     public void setId(Long id) {
@@ -81,6 +79,14 @@ public class User implements UserDetails {
         this.email = email;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -89,12 +95,20 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public String getName() {
-        return name;
+    public String getConfirmPassword() {
+        return confirmPassword;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
+
+    public byte[] getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(byte[] profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     public String getPictureUrl() {
@@ -105,6 +119,14 @@ public class User implements UserDetails {
         this.pictureUrl = pictureUrl;
     }
 
+    public String getContactNo() {
+        return contactNo;
+    }
+
+    public void setContactNo(String contactNo) {
+        this.contactNo = contactNo;
+    }
+
     public String getRole() {
         return role;
     }
@@ -113,9 +135,12 @@ public class User implements UserDetails {
         this.role = role;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority(role)); // Corrected
+    public String getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
     }
 
     @Override
@@ -143,21 +168,9 @@ public class User implements UserDetails {
         return true;
     }
 
-    public String getUniqueId() {
-        return uniqueId;
-    }
+   
 
-    public void setUniqueId(String uniqueId) {
-        this.uniqueId = uniqueId;
-    }
-
-    public String getcontactNo() {
-        return contactNo;
-    }
-
-    public void setcontactNo(String contactNo) {
-        this.contactNo = contactNo;
-    }
+   
     
 
 }
