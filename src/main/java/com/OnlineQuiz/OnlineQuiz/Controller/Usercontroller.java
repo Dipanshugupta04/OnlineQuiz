@@ -23,13 +23,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.Authentication;
 
 import com.OnlineQuiz.OnlineQuiz.DTO.EditProfileRequest;
+import com.OnlineQuiz.OnlineQuiz.DTO.PasswordResetRequest;
 import com.OnlineQuiz.OnlineQuiz.Entity.User;
 import com.OnlineQuiz.OnlineQuiz.Reposistory.UserRepository;
 import com.OnlineQuiz.OnlineQuiz.Service.AuthService;
 import com.OnlineQuiz.OnlineQuiz.Service.JWTService;
 import com.OnlineQuiz.OnlineQuiz.Service.userService;
 
-@CrossOrigin(origins = {"https://majestic-kangaroo-33ba55.netlify.app","http://quizwiz-frontend.s3-website.ap-south-1.amazonaws.com ", "http://127.0.0.1:5502", "http://localhost:5502","https://heroic-sunburst-56c10d.netlify.app" })
+@CrossOrigin(origins = {"https://majestic-kangaroo-33ba55.netlify.app","http://quizwiz-frontend.s3-website.ap-south-1.amazonaws.com", "http://127.0.0.1:5502", "http://localhost:5502","https://heroic-sunburst-56c10d.netlify.app" ,"http://127.0.0.1:5504",
+                "http://localhost:5504"})
 @RestController
 @RequestMapping("/api")
 
@@ -148,4 +150,12 @@ public ResponseEntity<?> login(@RequestBody User user) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }
+    @PostMapping("/reset-password")
+public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequest request) {
+    String email=request.getEmail();
+    
+    userService.updateProfiles(email, request);
+    return ResponseEntity.ok("Password reset successful");
+}
+
 }

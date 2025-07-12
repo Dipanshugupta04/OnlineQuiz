@@ -39,7 +39,8 @@ import com.OnlineQuiz.OnlineQuiz.Service.QuizService;
 import com.OnlineQuiz.OnlineQuiz.Service.participantService;
 
 @RestController
-@CrossOrigin(origins = {"http://quizwiz-frontend.s3-website.ap-south-1.amazonaws.com ","https://majestic-kangaroo-33ba55.netlify.app", "http://127.0.0.1:5502", "http://localhost:5502","https://heroic-sunburst-56c10d.netlify.app" })
+@CrossOrigin(origins = {"http://127.0.0.1:5504",
+                "http://localhost:5504","http://quizwiz-frontend.s3-website.ap-south-1.amazonaws.com","https://majestic-kangaroo-33ba55.netlify.app", "http://127.0.0.1:5502", "http://localhost:5502","https://heroic-sunburst-56c10d.netlify.app" })
 @RequestMapping("/quiz")
 // Quiz Controller
 public class QuizController {
