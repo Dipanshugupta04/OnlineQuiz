@@ -100,7 +100,8 @@ public class SecurityConfig {
                                                                 "/api/quizzes/**",
                                                                 "/api/edit-profile",
                                                                 "/api/user",
-                                                                "/send")
+                                                                "/send",
+                                                                "/profile/**")
                                                 .authenticated()
 
                                                 // All other requests require authentication

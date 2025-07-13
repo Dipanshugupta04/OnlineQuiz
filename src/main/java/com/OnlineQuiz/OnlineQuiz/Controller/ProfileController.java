@@ -40,7 +40,7 @@ public class ProfileController {
     private ResultRepository resultRepository;
 
     @PostMapping("/upload-profile-picture")
-    public ResponseEntity<?> uploadProfilePicture(@RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<?> uploadProfilePicture(@RequestParam("files") MultipartFile file) throws IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
         
