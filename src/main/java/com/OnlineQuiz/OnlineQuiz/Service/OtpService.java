@@ -91,5 +91,30 @@ public class OtpService {
         System.out.println("OTP verification failed.");
         return ResponseEntity.ok(false);
     }
+
+    public ResponseEntity<?> ReSendOtp(String emails) {
+        System.out.println("send email is :"+emails);
+         String email = emails.replace("\"", "").replace("'", "").trim().toLowerCase();
+        Optional<OtpVerification> existing = otpRepository.findByEmail(email);
+
+        if (existing.isPresent() && existing.get().getExpiryTime().isAfter(LocalDateTime.now().minusSeconds(30))) {
+            throw new IllegalStateException("Please wait before requesting OTP again.");
+        }
+
+        String otp = generateOtp();
+        OtpVerification otpRecord=new OtpVerification();
+
+        otpRecord.setEmail(email.trim().toLowerCase());
+        otpRecord.setOtp(otp);
+        otpRecord.setExpiryTime(LocalDateTime.now().plusMinutes(2));
+
+        otpRepository.save(otpRecord);
+        System.out.println(otpRecord.getOtp());
+        sendOtpToEmail(email, otp);
+        return ResponseEntity.ok("OTP Save successfully");
+    
+
+
+    }
     
 }

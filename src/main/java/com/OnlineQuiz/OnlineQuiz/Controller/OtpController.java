@@ -49,7 +49,10 @@ public class OtpController {
 
     @PostMapping("/resend")
     public ResponseEntity<?> resendOtp(@RequestBody String email) {
-        otpService.createAndSendOtp(email);
+        String emails = email.substring(email.indexOf(":") + 1, email.indexOf("}"))
+        .trim()
+        .toLowerCase();
+        otpService.ReSendOtp(emails);
         return ResponseEntity.ok("OTP resent successfully to " + email);
     }
 

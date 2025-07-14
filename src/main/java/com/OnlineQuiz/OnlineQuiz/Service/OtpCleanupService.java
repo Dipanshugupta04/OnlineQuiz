@@ -17,7 +17,7 @@ public class OtpCleanupService {
     @Autowired
     private OtpVerificationRepository otpRepository;
 
-    @Scheduled(fixedRate = 180000) // runs every 180 seconds
+    @Scheduled(fixedRate = 120000) // runs every 180 seconds
     public void deleteExpiredOtps() {
         List<OtpVerification> expiredOtps = otpRepository.findAll().stream()
                 .filter(otp -> otp.getExpiryTime().isBefore(LocalDateTime.now()))
