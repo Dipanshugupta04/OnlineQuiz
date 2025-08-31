@@ -6,7 +6,6 @@ services:
     container_name: springboot-app
     ports:
       - "8081:8081"
-   
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://dpg-d2q37p3e5dus73bk5vsg-a.oregon-postgres.render.com:5432/onlinequiz_wyjs?sslmode=require
       SPRING_DATASOURCE_USERNAME: onlinequiz_wyjs_user
@@ -16,7 +15,7 @@ services:
       - springboot-net
 
   db:
-    image: postgres:14
+    image: postgres:latest
     container_name: postgres-db
     restart: always
     environment:
@@ -25,11 +24,8 @@ services:
       POSTGRES_PASSWORD: 18N3iNR1bCmXMITUA6ewApv92tXBJdtZ
     ports:
       - "5432:5432"
-
     networks:
       - springboot-net
-
-
 
 networks:
   springboot-net:
