@@ -1,3 +1,3 @@
 FROM openjdk:17-jdk
-ADD target/demo.jar demo.jar
-ENTRYPOINT ["java","-jar","/demo.jar"]
+ADD target/OnlineQuiz.jar OnlineQuiz.jar
+ENTRYPOINT ["java","-jar","/OnlineQuiz.jar"]
