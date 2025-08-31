@@ -1,0 +1,35 @@
+version: "3.7"
+
+services:
+  app:
+    build: .
+    container_name: springboot-app
+    ports:
+      - "8081:8081"
+   
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://dpg-d2pa3pv5r7bs739esee0-a.oregon-postgres.render.com:5432/demo_lumh?sslmode=require
+      SPRING_DATASOURCE_USERNAME: demo_lumh_user
+      SPRING_DATASOURCE_PASSWORD: snSqv0SvYidAJZDYfjYQq1JkynQntYqQ
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    networks:
+      - springboot-net
+
+  db:
+    image: postgres:14
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_DB: demo_lumh
+      POSTGRES_USER: demo_lumh_user
+      POSTGRES_PASSWORD: snSqv0SvYidAJZDYfjYQq1JkynQntYqQ
+    ports:
+      - "5432:5432"
+
+    networks:
+      - springboot-net
+
+
+
+networks:
+  springboot-net:
