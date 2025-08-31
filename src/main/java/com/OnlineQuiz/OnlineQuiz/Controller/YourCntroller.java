@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller 
 @CrossOrigin(origins = {"http://127.0.0.1:5504",
-                "http://localhost:5504", "https://majestic-kangaroo-33ba55.netlify.app","http://127.0.0.1:5502", "http://localhost:5502","https://heroic-sunburst-56c10d.netlify.app","http://quizwiz-frontend.s3-website.ap-south-1.amazonaws.com","http://quizwiz-frontend.s3-website.ap-south-1.amazonaws.com" })
+                "http://localhost:5504", "onlinequizwin.netlify.app","http://127.0.0.1:5502", "http://localhost:5502","https://heroic-sunburst-56c10d.netlify.app","http://quizwiz-frontend.s3-website.ap-south-1.amazonaws.com","http://quizwiz-frontend.s3-website.ap-south-1.amazonaws.com" })
  // ✅ Important: use @Controller for MVC
 public class YourCntroller {
     @GetMapping("/home")

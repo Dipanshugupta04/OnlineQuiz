@@ -26,7 +26,7 @@ public class User implements UserDetails {
 
     private String confirmPassword;
     @Lob
-    @Column(name = "profile_picture", columnDefinition = "LONGBLOB")
+    @Column(name = "profile_picture", columnDefinition = "BYTEA")
     private byte[] profilePicture;
 
     private String pictureUrl;
@@ -40,25 +40,7 @@ public class User implements UserDetails {
     
 //getter and setter
 
-    
-
-    
-
-  
-  
-
-
-   
-
-    
-
-  
-
-  
-
-   
-
-    @Override
+      @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority(role)); // Corrected
     }

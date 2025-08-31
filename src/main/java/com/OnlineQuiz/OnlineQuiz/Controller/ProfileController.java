@@ -26,7 +26,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = {"http://quizwiz-frontend.s3-website.ap-south-1.amazonaws.com", "https://majestic-kangaroo-33ba55.netlify.app","http://127.0.0.1:5502", "http://localhost:5502","https://heroic-sunburst-56c10d.netlify.app" ,"http://127.0.0.1:5504",
+@CrossOrigin(origins = {"http://quizwiz-frontend.s3-website.ap-south-1.amazonaws.com", "onlinequizwin.netlify.app","http://127.0.0.1:5502", "http://localhost:5502","https://heroic-sunburst-56c10d.netlify.app" ,"http://127.0.0.1:5504",
                 "http://localhost:5504"})
 @RequestMapping("/profile")
 public class ProfileController {

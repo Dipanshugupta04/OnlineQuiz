@@ -79,7 +79,7 @@ public class SecurityConfig {
                                                                 "/api/register",
                                                                 "/api/login",
                                                                 "/auth/github",
-                                                                "/quiz/home",
+                                                                "/api/home",
                                                                 "/home",
                                                                 "/quiz/join-room",
                                                                 "/quiz/questions/**",
