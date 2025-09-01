@@ -40,7 +40,7 @@ import com.OnlineQuiz.OnlineQuiz.Service.participantService;
 
 @RestController
 @CrossOrigin(origins = {"http://127.0.0.1:5504",
-                "http://localhost:5504","http://quizwiz-frontend.s3-website.ap-south-1.amazonaws.com","onlinequizwin.netlify.app", "http://127.0.0.1:5502", "http://localhost:5502","https://heroic-sunburst-56c10d.netlify.app" })
+                "http://localhost:5504","http://quizwiz-frontend.s3-website.ap-south-1.amazonaws.com","https://onlinequizwin.netlify.app", "http://127.0.0.1:5502", "http://localhost:5502","https://heroic-sunburst-56c10d.netlify.app" })
 @RequestMapping("/quiz")
 // Quiz Controller
 public class QuizController {
