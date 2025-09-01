@@ -136,7 +136,7 @@ public class SecurityConfig {
         CorsConfigurationSource corsConfigurationSource() {
                 CorsConfiguration configuration = new CorsConfiguration();
                 configuration.setAllowedOrigins(List.of(
-                                "https://majestic-kangaroo-33ba55.netlify.app",
+                                "onlinequizwin.netlify.app",
                                 "http://127.0.0.1:5502",
                                 "http://localhost:5502",
                                 "http://127.0.0.1:5504",
