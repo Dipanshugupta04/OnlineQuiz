@@ -136,16 +136,17 @@ public class SecurityConfig {
         CorsConfigurationSource corsConfigurationSource() {
                 CorsConfiguration configuration = new CorsConfiguration();
                 configuration.setAllowedOrigins(List.of(
-                                "onlinequizwin.netlify.app",
-                                "http://127.0.0.1:5502",
-                                "http://localhost:5502",
-                                "http://127.0.0.1:5504",
-                                "http://localhost:5504",
-                                "http://127.0.0.1:5501",
-                                "http://localhost:5501",
-                                "https://heroic-sunburst-56c10d.netlify.app",
-                                "http://quizwiz-frontend.s3-website.ap-south-1.amazonaws.com",
-                                "https://quizwiz-frontend.s3-website.ap-south-1.amazonaws.com"));
+                                "onlinequizwin.netlify.app"
+                                // "http://127.0.0.1:5502",
+                                // "http://localhost:5502",
+                                // "http://127.0.0.1:5504",
+                                // "http://localhost:5504",
+                                // "http://127.0.0.1:5501",
+                                // "http://localhost:5501",
+                                // "https://heroic-sunburst-56c10d.netlify.app",
+                                // "http://quizwiz-frontend.s3-website.ap-south-1.amazonaws.com",
+                                // "https://quizwiz-frontend.s3-website.ap-south-1.amazonaws.com"
+                                ));
                 configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                 configuration.setAllowedHeaders(Arrays.asList("*"));
                 configuration.setAllowCredentials(true);
