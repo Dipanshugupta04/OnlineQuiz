@@ -20,8 +20,8 @@ public class gitHubAuthService {
 private JWTService jwtService;
 @Autowired
 private Role role;
-private final String clientId = "Ov23liFykPSWPHAdplg6";
-    private final String clientSecret = "ea5b109d14eb8f62f2d37f204741a8bc0dab9286";
+private final String clientId = "xxxxxxxxxxxxxxx";
+    private final String clientSecret = "xxxxxxxxxxxxxxxx";
 
     public Map<String, Object> verifyAndAuthenticateGitHubUser(String code) {
         RestTemplate restTemplate = new RestTemplate();
